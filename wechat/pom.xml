@@ -25,12 +25,6 @@
             <version>${feign.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-okhttp</artifactId>
-            <version>${feign.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
             <version>${jackson.version}</version>
