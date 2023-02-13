@@ -12,19 +12,27 @@
 
     <artifactId>wechat</artifactId>
 
+    <properties>
+        <bouncycastle.version>1.69</bouncycastle.version>
+        <feign-core.version>11.8</feign-core.version>
+        <jackson.version>2.13.1</jackson.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-core</artifactId>
+            <version>${feign-core.version}</version>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-xml</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk15to18</artifactId>
-            <version>1.69</version>
+            <version>${bouncycastle.version}</version>
         </dependency>
     </dependencies>
 </project>
