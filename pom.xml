@@ -10,8 +10,8 @@
         <module>wechat</module>
     </modules>
 
-    <groupId>com.staringpig</groupId>
-    <artifactId>framework</artifactId>
+    <groupId>com.staringpig.framework</groupId>
+    <artifactId>pom</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
