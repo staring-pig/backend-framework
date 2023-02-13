@@ -1,0 +1,14 @@
+wechat.appName:
+wechat.appId:
+wechat.appSecret:
+feign:
+  httpclient:
+    enabled: false
+  okhttp:
+    enabled: true
+  client:
+    config:
+      wechat:
+        loggerLevel: info
+        connectTimeout: 1000
+        readTimeout: 5000

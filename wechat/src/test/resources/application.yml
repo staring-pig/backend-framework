@@ -1,0 +1,19 @@
+wechat.appName: gh_27501147913f_test
+wechat.appId: wx0da6a5725c1c8cdc
+wechat.appSecret: fe5c47aa3722ee1f374116820dc78983
+wechat.token: 999
+mini.appId: wxfde5faac7aa7fa9f
+mini.appSecret: 52f3ad446448aafd0161c89efea36ec2
+feign:
+  httpclient:
+    enabled: false
+  okhttp:
+    enabled: true
+  client:
+    config:
+      wechat:
+        connectTimeout: 1000
+        readTimeout: 5000
+      mini-program:
+        contract: feign.Contract.Default
+        logger-level: FULL
