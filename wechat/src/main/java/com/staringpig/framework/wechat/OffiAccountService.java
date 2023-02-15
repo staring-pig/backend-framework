@@ -25,7 +25,18 @@ public interface OffiAccountService {
      */
     <T> void sendTemplateMessage(Message<T> message);
 
+    /**
+     * 创建菜单
+     */
     void createMenu(OffiAccountMenu offiAccountMenu);
 
+    /**
+     * 查询菜单
+     */
     OffiAccountMenu queryMenu();
+
+    /**
+     * 通过客服回复消息
+     */
+    void sendCustomMessageBySpecialist(String openId, String textContent);
 }

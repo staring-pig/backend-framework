@@ -1,7 +1,6 @@
 package com.staringpig.framework.wechat.offiaccount.ordinary;
 
 import com.staringpig.framework.wechat.account.OPAppAccount;
-import com.staringpig.framework.wechat.offiaccount.OAMessage;
 import lombok.Getter;
 
 /**
@@ -23,9 +22,9 @@ public final class LinkMessage extends OrdinaryMessage {
      */
     private final String url;
 
-    public LinkMessage(String id, OPAppAccount opAppAccount, Long createTime, OAMessage.Type type, String title,
-                       String description, String url) {
-        super(id, opAppAccount, createTime, type);
+    public LinkMessage(String id, OPAppAccount opAppAccount, Long createTime, String title, String description,
+                       String url) {
+        super(id, opAppAccount, createTime, Type.link);
         this.title = title;
         this.description = description;
         this.url = url;

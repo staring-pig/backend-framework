@@ -59,4 +59,13 @@ public class ReceivedMessageData {
 
     @JacksonXmlProperty(localName = "Recognition")
     private String recognition;
+
+    @JacksonXmlProperty(localName = "Title")
+    private String title;
+
+    @JacksonXmlProperty(localName = "Description")
+    private String description;
+
+    @JacksonXmlProperty(localName = "Url")
+    private String url;
 }

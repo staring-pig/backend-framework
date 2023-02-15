@@ -10,6 +10,8 @@ import com.staringpig.framework.wechat.offiaccount.event.SubscribeEvent;
 import com.staringpig.framework.wechat.offiaccount.event.UnsubscribeEvent;
 import com.staringpig.framework.wechat.offiaccount.listener.api.PublishedMessageData;
 import com.staringpig.framework.wechat.offiaccount.listener.api.ReceivedMessageData;
+import com.staringpig.framework.wechat.offiaccount.ordinary.LinkMessage;
+import com.staringpig.framework.wechat.offiaccount.ordinary.TextMessage;
 import com.staringpig.framework.wechat.offiaccount.reply.ImageReplyMessage;
 import com.staringpig.framework.wechat.offiaccount.reply.MusicReplyMessage;
 import com.staringpig.framework.wechat.offiaccount.reply.NewsReplyMessage;
@@ -97,8 +99,15 @@ public class NormalOAMessageConvertor implements OAMessageConvertor {
                 }
                 break;
             case link:
+                oaMessage = new LinkMessage(String.valueOf(messageData.getMsgId()), account,
+                        messageData.getCreateTime(), messageData.getTitle(), messageData.getDescription(),
+                        messageData.getUrl());
+                break;
             case news:
             case text:
+                oaMessage = new TextMessage(String.valueOf(messageData.getMsgId()), account,
+                        messageData.getCreateTime(), messageData.getContent());
+                break;
             case image:
             case music:
             case video:

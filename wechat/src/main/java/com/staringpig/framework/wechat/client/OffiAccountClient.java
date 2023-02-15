@@ -3,6 +3,7 @@ package com.staringpig.framework.wechat.client;
 import com.staringpig.framework.wechat.client.api.offi.GZHAccessTokenQuery;
 import com.staringpig.framework.wechat.client.api.offi.MenuAdd;
 import com.staringpig.framework.wechat.client.api.offi.MenuQuery;
+import com.staringpig.framework.wechat.client.api.offi.SendCustomMessageCommand;
 import com.staringpig.framework.wechat.client.api.offi.SendTemplateMessageCommand;
 import com.staringpig.framework.wechat.client.api.offi.UserInfoQuery;
 import com.staringpig.framework.wechat.client.api.offi.webpage.OAWebPageAccessTokenQuery;
@@ -66,4 +67,9 @@ public interface OffiAccountClient {
     @RequestLine("GET /sns/userinfo?access_token={accessToken}&openid={openId}&lang=zh_CN")
     OAWebPageUserInfoQuery.Result gzhWebPageUserInfo(@Param("accessToken") String accessToken, @Param("openId") String openId);
 
+    /**
+     * 客服接口 - 发消息
+     */
+    @RequestLine("POST /cgi-bin/message/custom/send?access_token={accessToken}")
+    SendCustomMessageCommand.Result sendCustomMessageBySpecialist(@Param("accessToken") String accessToken, SendCustomMessageCommand command);
 }

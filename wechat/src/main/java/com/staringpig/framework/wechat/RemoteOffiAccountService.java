@@ -6,6 +6,7 @@ import com.staringpig.framework.wechat.client.api.WechatServerResult;
 import com.staringpig.framework.wechat.client.api.corp.AccessTokenQuery;
 import com.staringpig.framework.wechat.client.api.offi.MenuAdd;
 import com.staringpig.framework.wechat.client.api.offi.MenuQuery;
+import com.staringpig.framework.wechat.client.api.offi.SendCustomMessageCommand;
 import com.staringpig.framework.wechat.client.api.offi.SendTemplateMessageCommand;
 import com.staringpig.framework.wechat.client.api.offi.UserInfoQuery;
 import com.staringpig.framework.wechat.message.Message;
@@ -114,5 +115,17 @@ public class RemoteOffiAccountService implements OffiAccountService {
         MenuQuery.Result queryResult = offiAccountClient.queryMenu(accessToken);
         queryResult.isOK();
         return queryResult.getOffiAccountMenu();
+    }
+
+    @Override
+    public void sendCustomMessageBySpecialist(String openId, String textContent) {
+        String accessToken = this.fetchAccessToken();
+        SendCustomMessageCommand.Result result = offiAccountClient.sendCustomMessageBySpecialist(accessToken,
+                SendCustomMessageCommand.builder()
+                        .messageType("text")
+                        .text(new SendCustomMessageCommand.Text(textContent))
+                        .openId(openId)
+                        .build());
+        result.isOK();
     }
 }
