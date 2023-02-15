@@ -12,12 +12,6 @@
 
     <artifactId>wechat</artifactId>
 
-    <properties>
-        <bouncycastle.version>1.69</bouncycastle.version>
-        <feign.version>11.8</feign.version>
-        <jackson.version>2.13.1</jackson.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>io.github.openfeign</groupId>

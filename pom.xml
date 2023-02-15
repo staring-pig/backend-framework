@@ -9,6 +9,7 @@
     <modules>
         <module>wechat</module>
         <module>bom</module>
+        <module>openai</module>
     </modules>
 
     <groupId>com.staringpig.framework</groupId>
@@ -21,9 +22,11 @@
         <java.version>11</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <fastjson.version>1.2.83</fastjson.version>
         <mica.version>2.1.1-GA</mica.version>
         <lombok.version>1.18.22</lombok.version>
+        <bouncycastle.version>1.69</bouncycastle.version>
+        <feign.version>11.8</feign.version>
+        <jackson.version>2.13.1</jackson.version>
     </properties>
 
     <dependencies>
