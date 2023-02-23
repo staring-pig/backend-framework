@@ -1,6 +1,6 @@
 package com.staringpig.framework.wechat;
 
-import com.staringpig.framework.wechat.client.api.offi.webpage.OAWebPageAccessTokenQuery;
+import com.staringpig.framework.wechat.client.api.offi.webpage.OAWebPageAccessCommand;
 import com.staringpig.framework.wechat.client.api.offi.webpage.OAWebPageUserInfoQuery;
 
 /**
@@ -8,7 +8,10 @@ import com.staringpig.framework.wechat.client.api.offi.webpage.OAWebPageUserInfo
  * time 2022-4-14 16:09
  */
 public interface OAWebPageService {
-    OAWebPageAccessTokenQuery.Result getWebPageAccessToken(OAWebPageAccessTokenQuery query);
+
+    OAWebPageAccessCommand.Result webPageAccess(String code);
+
+    String fetchOpenId(String code);
 
     OAWebPageUserInfoQuery.Result gzhWebPageUserInfo(String webAccessToken, String openId);
 }

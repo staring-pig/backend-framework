@@ -6,7 +6,7 @@ import com.staringpig.framework.wechat.client.api.offi.MenuQuery;
 import com.staringpig.framework.wechat.client.api.offi.SendCustomMessageCommand;
 import com.staringpig.framework.wechat.client.api.offi.SendTemplateMessageCommand;
 import com.staringpig.framework.wechat.client.api.offi.UserInfoQuery;
-import com.staringpig.framework.wechat.client.api.offi.webpage.OAWebPageAccessTokenQuery;
+import com.staringpig.framework.wechat.client.api.offi.webpage.OAWebPageAccessCommand;
 import com.staringpig.framework.wechat.client.api.offi.webpage.OAWebPageUserInfoQuery;
 import com.staringpig.framework.wechat.offiaccount.menu.OffiAccountMenu;
 import feign.Param;
@@ -57,9 +57,9 @@ public interface OffiAccountClient {
      * 微信网页授权-code换取access_token
      */
     @RequestLine("POST /sns/oauth2/access_token?appid={appId}&secret={secret}&code={code}&grant_type=authorization_code")
-    OAWebPageAccessTokenQuery.Result gzhWebPageAccessToken(@Param("appId") String appId,
-                                                           @Param("secret") String secret,
-                                                           @Param("code") String code);
+    OAWebPageAccessCommand.Result oaWebPageAccessToken(@Param("appId") String appId,
+                                                       @Param("secret") String secret,
+                                                       @Param("code") String code);
 
     /**
      * 微信网页授权-code换取access_token
