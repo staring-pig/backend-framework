@@ -68,4 +68,10 @@ public class ReceivedMessageData {
 
     @JacksonXmlProperty(localName = "Url")
     private String url;
+
+    @JacksonXmlProperty(localName = "MediaId")
+    private String mediaId;
+
+    @JacksonXmlProperty(localName = "Format")
+    private String format;
 }

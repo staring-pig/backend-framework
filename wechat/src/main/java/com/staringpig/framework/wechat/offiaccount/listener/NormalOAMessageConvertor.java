@@ -12,6 +12,7 @@ import com.staringpig.framework.wechat.offiaccount.listener.api.PublishedMessage
 import com.staringpig.framework.wechat.offiaccount.listener.api.ReceivedMessageData;
 import com.staringpig.framework.wechat.offiaccount.ordinary.LinkMessage;
 import com.staringpig.framework.wechat.offiaccount.ordinary.TextMessage;
+import com.staringpig.framework.wechat.offiaccount.ordinary.VoiceMessage;
 import com.staringpig.framework.wechat.offiaccount.reply.ImageReplyMessage;
 import com.staringpig.framework.wechat.offiaccount.reply.MusicReplyMessage;
 import com.staringpig.framework.wechat.offiaccount.reply.NewsReplyMessage;
@@ -112,6 +113,10 @@ public class NormalOAMessageConvertor implements OAMessageConvertor {
             case music:
             case video:
             case voice:
+                oaMessage = new VoiceMessage(String.valueOf(messageData.getMsgId()), account,
+                        messageData.getCreateTime(), messageData.getMediaId(),
+                        VoiceMessage.Format.valueOf(messageData.getFormat()), messageData.getRecognition());
+                break;
             case location:
             case shortvideo:
             default:

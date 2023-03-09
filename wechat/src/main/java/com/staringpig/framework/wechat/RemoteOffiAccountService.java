@@ -7,13 +7,17 @@ import com.staringpig.framework.wechat.client.api.corp.AccessTokenQuery;
 import com.staringpig.framework.wechat.client.api.offi.MenuAdd;
 import com.staringpig.framework.wechat.client.api.offi.MenuQuery;
 import com.staringpig.framework.wechat.client.api.offi.SendCustomMessageCommand;
+import com.staringpig.framework.wechat.client.api.offi.SendCustomVoiceMessageCommand;
 import com.staringpig.framework.wechat.client.api.offi.SendTemplateMessageCommand;
+import com.staringpig.framework.wechat.client.api.offi.UploadVoiceCommand;
 import com.staringpig.framework.wechat.client.api.offi.UserInfoQuery;
 import com.staringpig.framework.wechat.message.Message;
 import com.staringpig.framework.wechat.message.OffiAccountTemplatedMessage;
 import com.staringpig.framework.wechat.message.OffiAccountToMiniProgramTemplatedMessage;
 import com.staringpig.framework.wechat.message.OffiAccountToUrlTemplatedMessage;
 import com.staringpig.framework.wechat.offiaccount.menu.OffiAccountMenu;
+
+import java.io.File;
 
 /**
  * 基础的开放平台服务，封装一些权限验证
@@ -127,5 +131,24 @@ public class RemoteOffiAccountService implements OffiAccountService {
                         .openId(openId)
                         .build());
         result.isOK();
+    }
+
+    @Override
+    public void sendCustomVoiceMessageBySpecialist(String openId, String mediaId) {
+        String accessToken = this.fetchAccessToken();
+        SendCustomVoiceMessageCommand.Result result = offiAccountClient.sendCustomVoiceMessageBySpecialist(accessToken,
+                SendCustomVoiceMessageCommand.builder()
+                        .messageType("voice")
+                        .voice(new SendCustomVoiceMessageCommand.Voice(mediaId))
+                        .openId(openId)
+                        .build());
+        result.isOK();
+    }
+
+    @Override
+    public String uploadVoice(File media) {
+        UploadVoiceCommand.Result result = offiAccountClient.uploadVoice(this.fetchAccessToken(), media);
+        result.isOK();
+        return result.getMediaId();
     }
 }

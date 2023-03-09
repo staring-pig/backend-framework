@@ -4,13 +4,18 @@ import com.staringpig.framework.wechat.client.api.offi.GZHAccessTokenQuery;
 import com.staringpig.framework.wechat.client.api.offi.MenuAdd;
 import com.staringpig.framework.wechat.client.api.offi.MenuQuery;
 import com.staringpig.framework.wechat.client.api.offi.SendCustomMessageCommand;
+import com.staringpig.framework.wechat.client.api.offi.SendCustomVoiceMessageCommand;
 import com.staringpig.framework.wechat.client.api.offi.SendTemplateMessageCommand;
+import com.staringpig.framework.wechat.client.api.offi.UploadVoiceCommand;
 import com.staringpig.framework.wechat.client.api.offi.UserInfoQuery;
 import com.staringpig.framework.wechat.client.api.offi.webpage.OAWebPageAccessCommand;
 import com.staringpig.framework.wechat.client.api.offi.webpage.OAWebPageUserInfoQuery;
 import com.staringpig.framework.wechat.offiaccount.menu.OffiAccountMenu;
+import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
+
+import java.io.File;
 
 /**
  * 公众号客户端
@@ -72,4 +77,18 @@ public interface OffiAccountClient {
      */
     @RequestLine("POST /cgi-bin/message/custom/send?access_token={accessToken}")
     SendCustomMessageCommand.Result sendCustomMessageBySpecialist(@Param("accessToken") String accessToken, SendCustomMessageCommand command);
+
+    /**
+     * 客服接口 - 发语音消息
+     */
+    @RequestLine("POST /cgi-bin/message/custom/send?access_token={accessToken}")
+    SendCustomVoiceMessageCommand.Result sendCustomVoiceMessageBySpecialist(@Param("accessToken") String accessToken,
+                                                                            SendCustomVoiceMessageCommand command);
+
+    /**
+     * 上传语音
+     */
+    @RequestLine("POST /cgi-bin/media/upload?access_token={accessToken}&type=voice")
+    @Headers("Content-Type: multipart/form-data")
+    UploadVoiceCommand.Result uploadVoice(@Param("accessToken") String accessToken, @Param("media") File media);
 }

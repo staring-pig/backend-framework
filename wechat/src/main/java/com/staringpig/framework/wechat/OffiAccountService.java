@@ -4,6 +4,8 @@ import com.staringpig.framework.wechat.client.api.offi.UserInfoQuery;
 import com.staringpig.framework.wechat.message.Message;
 import com.staringpig.framework.wechat.offiaccount.menu.OffiAccountMenu;
 
+import java.io.File;
+
 /**
  * 公众号应用服务
  */
@@ -39,4 +41,14 @@ public interface OffiAccountService {
      * 通过客服回复消息
      */
     void sendCustomMessageBySpecialist(String openId, String textContent);
+
+    /**
+     * 回复语音消息
+     */
+    void sendCustomVoiceMessageBySpecialist(String openId, String mediaId);
+
+    /**
+     * 上传语音
+     */
+    String uploadVoice(File media);
 }
