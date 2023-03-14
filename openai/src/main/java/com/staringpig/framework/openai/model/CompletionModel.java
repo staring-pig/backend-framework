@@ -68,7 +68,8 @@ public abstract class CompletionModel extends OpenAIModel {
         for (int i = 0; i < super.metadata.getN(); i++) {
             answer.append(StringUtil.trimWhitespace(completion.getChoices().get(i).getText()));
         }
-        return new Answer(super.cost(completion.getUsage().getTotalTokens()), answer.toString());
+        return new Answer(completion.getUsage().getTotalTokens(),
+                super.cost(completion.getUsage().getTotalTokens()), answer.toString());
     }
 
     @Override

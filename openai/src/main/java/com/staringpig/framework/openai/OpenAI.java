@@ -104,10 +104,10 @@ public abstract class OpenAI extends OpenAiService {
          */
         Map<String, Integer> logitBias;
 
-        private Metadata() {
+        public Metadata() {
         }
 
-        private Metadata(Double temperature, Integer n, List<String> stop) {
+        public Metadata(Double temperature, Integer n, List<String> stop) {
             this.temperature = temperature;
             this.n = n;
             this.stop = stop;

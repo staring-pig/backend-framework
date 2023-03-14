@@ -17,4 +17,9 @@ public abstract class BaseSession<E extends OpenAIModel> implements Session<E> {
         this.user = user;
         this.model = model;
     }
+
+    @Override
+    public String key() {
+        return user + model.getId();
+    }
 }

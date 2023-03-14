@@ -32,12 +32,20 @@ public abstract class ChatModel extends OpenAIModel {
 
     public Answer ask(String user, String question, Integer limitTokens, List<ChatMessage> chatMessages) {
         List<ChatMessage> newChatMessage = new ArrayList<>(chatMessages);
-        newChatMessage.add(new ChatMessage(ChatMessageRole.ASSISTANT.value(), question));
+        newChatMessage.add(new ChatMessage(ChatMessageRole.USER.value(), question));
+
+        int questionTokens = 0;
+        for (ChatMessage chatMessage : newChatMessage) {
+            questionTokens += 4;
+            questionTokens += OpenAIModel.tokens(chatMessage.getRole());
+            questionTokens += OpenAIModel.tokens(chatMessage.getContent());
+        }
+
         ChatCompletionResult completion = super.openAI.createChatCompletion(ChatCompletionRequest.builder()
                 .model(this.getId())
                 .messages(newChatMessage)
                 .temperature(super.metadata.getTemperature())
-                .maxTokens(Math.min(this.maxTokens, limitTokens) - OpenAIModel.tokens(question))
+                .maxTokens(Math.min(this.maxTokens, limitTokens) - questionTokens)
                 .user(user)
                 .n(super.metadata.getN())
                 .stop(this.metadata.getStop())
@@ -50,7 +58,8 @@ public abstract class ChatModel extends OpenAIModel {
         for (int i = 0; i < super.metadata.getN(); i++) {
             answer.append(StringUtil.trimWhitespace(completion.getChoices().get(i).getMessage().getContent()));
         }
-        return new Answer(super.cost(completion.getUsage().getTotalTokens()), answer.toString());
+        return new Answer(completion.getUsage().getTotalTokens(),
+                super.cost(completion.getUsage().getTotalTokens()), answer.toString());
     }
 
     @Override

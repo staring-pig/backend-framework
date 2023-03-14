@@ -23,4 +23,9 @@ public interface Session<M extends OpenAIModel> {
      * @return 结果
      */
     OpenAIModel.Answer ask(String question, Integer limitToken);
+
+    /**
+     * session-key
+     */
+    String key();
 }

@@ -10,7 +10,7 @@ import java.math.BigDecimal;
  */
 public class TextDavinci_0_0_3 extends CompletionModel {
 
-    private TextDavinci_0_0_3(OpenAI openAI, SessionManager sessionManager) {
+    public TextDavinci_0_0_3(OpenAI openAI, SessionManager sessionManager) {
         super("text-davinci-003", openAI, OpenAI.Metadata.defaultInstance(), 4097,
                 BigDecimal.valueOf(0.02), "", false, null, null, sessionManager);
     }

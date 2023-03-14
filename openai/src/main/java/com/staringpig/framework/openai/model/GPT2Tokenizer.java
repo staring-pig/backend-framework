@@ -11,11 +11,15 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
+import java.net.URI;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -45,8 +49,11 @@ public class GPT2Tokenizer {
         try {
             this.encoder = new JSONParser(new InputStreamReader(encoderFile.getInputStream(), StandardCharsets.UTF_8)).parseObject();
             this.decoder = encoder.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
-            List<String> bpe = Files.readAllLines(Paths.get(bpeFile.getURI()), StandardCharsets.UTF_8);
-
+            URI uri = bpeFile.getURI();
+            Map<String, String> env = new HashMap<>();
+            env.put("create", "true");
+            FileSystems.newFileSystem(uri, env);
+            List<String> bpe = Files.readAllLines(Paths.get(uri), StandardCharsets.UTF_8);
             for (int i = 0; i < bpe.size(); i++) {
                 String[] pairs = bpe.get(i).split(" ");
                 this.bpeRanks.put(MutablePair.of(pairs[0], pairs[1]), i);

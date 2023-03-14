@@ -8,11 +8,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Open-AI 提供的模型
@@ -21,6 +24,8 @@ import java.util.function.Consumer;
 public abstract class OpenAIModel {
 
     private static final GPT2Tokenizer gpt2Tokenizer = GPT2Tokenizer.fromPretrained("tokenizers/gpt2");
+    private static final Pattern SINGLE_CHINESE_PATTERN = Pattern.compile("[\\u4e00-\\u9fa5]");
+    private static final String MULTI_CHINESE_PATTERN_STRING = "[\\u4e00-\\u9fa5]+";
 
     /**
      * 模型的ID
@@ -39,11 +44,13 @@ public abstract class OpenAIModel {
     /**
      * 最大tokens
      */
-    protected final Integer maxTokens;
+    @Getter
+    public final Integer maxTokens;
 
     /**
      * 每1k tokens 的价格
      */
+    @Getter
     protected final BigDecimal pricePerThousandTokens;
     /**
      * session 管理
@@ -54,7 +61,19 @@ public abstract class OpenAIModel {
      * 计算请求消耗的tokens
      */
     protected static Integer tokens(String content) {
-        return gpt2Tokenizer.encode(content).size();
+        return chineseTokens(content) +
+                gpt2Tokenizer.encode(content.replaceAll(MULTI_CHINESE_PATTERN_STRING, StringUtils.EMPTY)).size();
+    }
+
+    private static Integer chineseTokens(String content) {
+        int count = 0;
+        Matcher matcher = SINGLE_CHINESE_PATTERN.matcher(content);
+        while (matcher.find()) {
+            for (int i = 0; i <= matcher.groupCount(); i++) {
+                count++;
+            }
+        }
+        return count * 2;
     }
 
     /**
@@ -99,6 +118,13 @@ public abstract class OpenAIModel {
      */
     public void closeCurrentSession(String user) {
         sessionManager.closeCurrentSession(user, this);
+    }
+
+    /**
+     * 保存session
+     */
+    public <M extends OpenAIModel> void saveSession(Session<M> session) {
+        sessionManager.save(session);
     }
 
     /**
@@ -157,6 +183,10 @@ public abstract class OpenAIModel {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Answer {
+        /**
+         * 总消耗的tokens
+         */
+        private Long totalTokens;
         /**
          * cost by model and tokens
          */

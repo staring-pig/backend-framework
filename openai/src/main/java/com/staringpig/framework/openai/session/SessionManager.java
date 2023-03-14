@@ -31,4 +31,9 @@ public interface SessionManager {
      * @param user 用户
      */
     <M extends OpenAIModel> void closeCurrentSession(String user, M model);
+
+    /**
+     * 保存当前session
+     */
+    <M extends OpenAIModel> void save(Session<M> session);
 }
