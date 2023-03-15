@@ -37,6 +37,11 @@ public class ChatSession extends BaseSession<ChatModel> implements Session<ChatM
     @Override
     public OpenAIModel.Answer ask(String question, Integer limitToken) {
         OpenAIModel.Answer answer = this.model.ask(user, question, limitToken, this.chatMessages);
+
+        if (answer.hasModeration()) {
+            return answer;
+        }
+
         this.chatMessages.add(new ChatMessage(ChatMessageRole.USER.value(), question));
         this.chatMessages.add(new ChatMessage(ChatMessageRole.ASSISTANT.value(), answer.getText()));
         this.totalToken += answer.getTotalTokens();

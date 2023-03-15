@@ -4,9 +4,12 @@ import com.staringpig.framework.openai.OpenAI;
 import com.staringpig.framework.openai.session.SessionManager;
 import com.theokanning.openai.completion.CompletionRequest;
 import com.theokanning.openai.completion.CompletionResult;
+import com.theokanning.openai.moderation.Moderation;
+import net.dreamlu.mica.core.utils.$;
 import net.dreamlu.mica.core.utils.StringUtil;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.function.Consumer;
 
 public abstract class CompletionModel extends OpenAIModel {
@@ -47,6 +50,12 @@ public abstract class CompletionModel extends OpenAIModel {
 
     @Override
     public Answer ask(String user, String question, Integer limitTokens) {
+
+        List<Moderation> moderation = super.moderation(question);
+        if ($.isNotEmpty(moderation)) {
+            return new Answer(moderation);
+        }
+
         CompletionResult completion = super.openAI.createCompletion(CompletionRequest.builder()
                 .model(this.getId())
                 .prompt(question)

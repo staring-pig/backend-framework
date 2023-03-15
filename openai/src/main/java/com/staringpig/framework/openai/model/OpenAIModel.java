@@ -3,19 +3,23 @@ package com.staringpig.framework.openai.model;
 import com.staringpig.framework.openai.OpenAI;
 import com.staringpig.framework.openai.session.Session;
 import com.staringpig.framework.openai.session.SessionManager;
+import com.theokanning.openai.moderation.Moderation;
+import com.theokanning.openai.moderation.ModerationRequest;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import net.dreamlu.mica.core.utils.$;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Open-AI 提供的模型
@@ -136,6 +140,14 @@ public abstract class OpenAIModel {
     }
 
     /**
+     * 判断是否有风险
+     */
+    public List<Moderation> moderation(String content) {
+        return this.openAI.createModeration(ModerationRequest.builder().input(content).build())
+                .results.stream().filter(Moderation::isFlagged).collect(Collectors.toList());
+    }
+
+    /**
      * 同步问答
      *
      * @param user     用户
@@ -179,9 +191,7 @@ public abstract class OpenAIModel {
 
     @Setter
     @Getter
-    @Builder
     @NoArgsConstructor
-    @AllArgsConstructor
     public static class Answer {
         /**
          * 总消耗的tokens
@@ -191,10 +201,30 @@ public abstract class OpenAIModel {
          * cost by model and tokens
          */
         private BigDecimal cost;
-
         /**
          * The generated text. Will include the prompt if CompletionRequest.echo is true
          */
         private String text;
+        /**
+         * 是否有合规
+         */
+        private List<Moderation> moderation;
+
+        public Answer(Long totalTokens, BigDecimal cost, String text) {
+            this.totalTokens = totalTokens;
+            this.cost = cost;
+            this.text = text;
+        }
+
+        public Answer(List<Moderation> moderation) {
+            this.moderation = moderation;
+        }
+
+        /**
+         * 是否有不喝过言论
+         */
+        public boolean hasModeration() {
+            return $.isNotEmpty(this.moderation);
+        }
     }
 }

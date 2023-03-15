@@ -6,6 +6,8 @@ import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatCompletionResult;
 import com.theokanning.openai.completion.chat.ChatMessage;
 import com.theokanning.openai.completion.chat.ChatMessageRole;
+import com.theokanning.openai.moderation.Moderation;
+import net.dreamlu.mica.core.utils.$;
 import net.dreamlu.mica.core.utils.StringUtil;
 
 import java.math.BigDecimal;
@@ -31,6 +33,12 @@ public abstract class ChatModel extends OpenAIModel {
     }
 
     public Answer ask(String user, String question, Integer limitTokens, List<ChatMessage> chatMessages) {
+
+        List<Moderation> moderation = super.moderation(question);
+        if ($.isNotEmpty(moderation)) {
+            return new Answer(moderation);
+        }
+
         List<ChatMessage> newChatMessage = new ArrayList<>(chatMessages);
         newChatMessage.add(new ChatMessage(ChatMessageRole.USER.value(), question));
 

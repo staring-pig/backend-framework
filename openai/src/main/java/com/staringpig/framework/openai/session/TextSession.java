@@ -2,6 +2,7 @@ package com.staringpig.framework.openai.session;
 
 import com.staringpig.framework.openai.model.CompletionModel;
 import com.staringpig.framework.openai.model.OpenAIModel;
+import com.theokanning.openai.moderation.Moderation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -47,6 +48,12 @@ public class TextSession extends BaseSession<CompletionModel> implements Session
 
     @Override
     public OpenAIModel.Answer ask(String question, Integer limitToken) {
+
+        List<Moderation> moderation = this.model.moderation(question);
+        if ($.isNotEmpty(moderation)) {
+            return new OpenAIModel.Answer(moderation);
+        }
+
         OpenAIModel.Answer answer = this.model.ask(this.user, buildQuestion(question), limitToken);
         this.completions.add(new Completion(question, answer.getText(), answer.getTotalTokens()));
 
