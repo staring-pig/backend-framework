@@ -35,5 +35,5 @@ public interface SessionManager {
     /**
      * 保存当前session
      */
-    <M extends OpenAIModel> void save(Session session);
+    void save(Session session);
 }
