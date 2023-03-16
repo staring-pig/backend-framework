@@ -1,8 +1,5 @@
-package com.staringpig.framework.openai;
+package com.staringpig.framework.openai.openai;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.theokanning.openai.OpenAiApi;
-import com.theokanning.openai.service.OpenAiService;
 import lombok.Getter;
 import okhttp3.Interceptor;
 
@@ -12,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class OpenAI extends OpenAiService {
-
-    private static final ObjectMapper errorMapper = defaultObjectMapper();
 
     public OpenAI(String token) {
         super(token);
@@ -113,7 +108,7 @@ public abstract class OpenAI extends OpenAiService {
             this.stop = stop;
         }
 
-        private static final Metadata instance = new Metadata(0.7, 1, List.of("/n"));
+        private static final Metadata instance = new Metadata(0.7, 1, List.of("stop"));
 
         public static Metadata defaultInstance() {
             return instance;

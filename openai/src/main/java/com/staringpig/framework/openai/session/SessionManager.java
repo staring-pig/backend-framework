@@ -15,7 +15,7 @@ public interface SessionManager {
      * @param user 用户
      * @return chat-session
      */
-    <M extends OpenAIModel> Session<M> openSession(String user, M model);
+    <M extends OpenAIModel> Session openSession(String user, M model);
 
     /**
      * 获取当前的session
@@ -23,7 +23,7 @@ public interface SessionManager {
      * @param user 用户
      * @return 可能为空的 chat-session
      */
-    <M extends OpenAIModel> Optional<Session<M>> current(String user, M model);
+    <M extends OpenAIModel> Optional<Session> current(String user, M model);
 
     /**
      * 关闭当前的session
@@ -35,5 +35,5 @@ public interface SessionManager {
     /**
      * 保存当前session
      */
-    <M extends OpenAIModel> void save(Session<M> session);
+    <M extends OpenAIModel> void save(Session session);
 }

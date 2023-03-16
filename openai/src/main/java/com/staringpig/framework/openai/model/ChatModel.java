@@ -1,6 +1,6 @@
 package com.staringpig.framework.openai.model;
 
-import com.staringpig.framework.openai.OpenAI;
+import com.staringpig.framework.openai.openai.OpenAI;
 import com.staringpig.framework.openai.session.SessionManager;
 import com.theokanning.openai.completion.chat.ChatCompletionRequest;
 import com.theokanning.openai.completion.chat.ChatCompletionResult;
@@ -33,11 +33,24 @@ public abstract class ChatModel extends OpenAIModel {
     }
 
     public Answer ask(String user, String question, Integer limitTokens, List<ChatMessage> chatMessages) {
-
         List<Moderation> moderation = super.moderation(question);
         if ($.isNotEmpty(moderation)) {
             return new Answer(moderation);
         }
+        return buildAnswer(super.openAI.createChatCompletion(buildRequest(user, question, limitTokens, chatMessages)));
+    }
+
+    private Answer buildAnswer(ChatCompletionResult completion) {
+        StringBuilder answer = new StringBuilder();
+        for (int i = 0; i < super.metadata.getN(); i++) {
+            answer.append(StringUtil.trimWhitespace(completion.getChoices().get(i).getMessage().getContent()));
+        }
+        return new Answer(completion.getUsage().getTotalTokens(),
+                super.cost(completion.getUsage().getTotalTokens()), answer.toString());
+    }
+
+    private ChatCompletionRequest buildRequest(String user, String question, Integer limitTokens,
+                                               List<ChatMessage> chatMessages) {
 
         List<ChatMessage> newChatMessage = new ArrayList<>(chatMessages);
         newChatMessage.add(new ChatMessage(ChatMessageRole.USER.value(), question));
@@ -49,7 +62,7 @@ public abstract class ChatModel extends OpenAIModel {
             questionTokens += OpenAIModel.tokens(chatMessage.getContent());
         }
 
-        ChatCompletionResult completion = super.openAI.createChatCompletion(ChatCompletionRequest.builder()
+        return ChatCompletionRequest.builder()
                 .model(this.getId())
                 .messages(newChatMessage)
                 .temperature(super.metadata.getTemperature())
@@ -61,17 +74,21 @@ public abstract class ChatModel extends OpenAIModel {
                 .logitBias(this.metadata.getLogitBias())
                 .presencePenalty(this.metadata.getPresencePenalty())
                 .stream(this.metadata.getStream())
-                .build());
-        StringBuilder answer = new StringBuilder();
-        for (int i = 0; i < super.metadata.getN(); i++) {
-            answer.append(StringUtil.trimWhitespace(completion.getChoices().get(i).getMessage().getContent()));
+                .build();
+    }
+
+    public void ask(String user, String question, Integer limitTokens, List<ChatMessage> chatMessages,
+                    Consumer<Answer> onAnswer) {
+        List<Moderation> moderation = super.moderation(question);
+        if ($.isNotEmpty(moderation)) {
+            onAnswer.accept(new Answer(moderation));
         }
-        return new Answer(completion.getUsage().getTotalTokens(),
-                super.cost(completion.getUsage().getTotalTokens()), answer.toString());
+        super.openAI.createChatCompletion(buildRequest(user, question, limitTokens, chatMessages),
+                result -> onAnswer.accept(buildAnswer(result)));
     }
 
     @Override
-    public void ask(String user, String question, Integer limitTokens, Consumer<Answer> answerCallBack) {
-
+    public void ask(String user, String question, Integer limitTokens, Consumer<Answer> onAnswer) {
+        ask(user, question, limitTokens, Collections.emptyList(), onAnswer);
     }
 }

@@ -1,6 +1,6 @@
 package com.staringpig.framework.openai.model;
 
-import com.staringpig.framework.openai.OpenAI;
+import com.staringpig.framework.openai.openai.OpenAI;
 import com.staringpig.framework.openai.session.SessionManager;
 
 import java.math.BigDecimal;

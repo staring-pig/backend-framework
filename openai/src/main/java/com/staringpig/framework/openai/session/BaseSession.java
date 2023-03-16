@@ -2,7 +2,7 @@ package com.staringpig.framework.openai.session;
 
 import com.staringpig.framework.openai.model.OpenAIModel;
 
-public abstract class BaseSession<E extends OpenAIModel> implements Session<E> {
+public abstract class BaseSession<E extends OpenAIModel> implements Session {
 
     /**
      * 用户

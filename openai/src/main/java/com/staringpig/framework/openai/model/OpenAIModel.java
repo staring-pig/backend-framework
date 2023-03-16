@@ -1,6 +1,6 @@
 package com.staringpig.framework.openai.model;
 
-import com.staringpig.framework.openai.OpenAI;
+import com.staringpig.framework.openai.openai.OpenAI;
 import com.staringpig.framework.openai.session.Session;
 import com.staringpig.framework.openai.session.SessionManager;
 import com.theokanning.openai.moderation.Moderation;
@@ -98,9 +98,8 @@ public abstract class OpenAIModel {
      * @param user 用户
      * @return chat-session
      */
-    @SuppressWarnings("unchecked")
-    public <M extends OpenAIModel> Session<M> openSession(String user) {
-        return (Session<M>) sessionManager.openSession(user, this);
+    public Session openSession(String user) {
+        return sessionManager.openSession(user, this);
     }
 
     /**
@@ -109,10 +108,8 @@ public abstract class OpenAIModel {
      * @param user 用户
      * @return 可能为空的 chat-session
      */
-    @SuppressWarnings("unchecked")
-    public <M extends OpenAIModel> Optional<Session<M>> current(String user) {
-        Optional<Session<OpenAIModel>> current = sessionManager.current(user, this);
-        return current.map(openAIModelSession -> (Session<M>) openAIModelSession);
+    public Optional<Session> current(String user) {
+        return sessionManager.current(user, this);
     }
 
     /**
@@ -127,16 +124,15 @@ public abstract class OpenAIModel {
     /**
      * 保存session
      */
-    public <M extends OpenAIModel> void saveSession(Session<M> session) {
+    public <M extends OpenAIModel> void saveSession(Session session) {
         sessionManager.save(session);
     }
 
     /**
      * 当前session或创建一个新的session
      */
-    @SuppressWarnings("unchecked")
-    public <M extends OpenAIModel> Session<M> currentOrElseOpenSession(String user) {
-        return (Session<M>) current(user).orElse(openSession(user));
+    public Session currentOrElseOpenSession(String user) {
+        return current(user).orElse(openSession(user));
     }
 
     /**
@@ -171,23 +167,22 @@ public abstract class OpenAIModel {
     /**
      * 异步问答
      *
-     * @param user           用户
-     * @param question       问题
-     * @param answerCallBack 答案call-back
+     * @param user     用户
+     * @param question 问题
+     * @param onAnswer 答案call-back
      */
-    public void ask(String user, String question, Consumer<Answer> answerCallBack) {
-        ask(user, question, Integer.MAX_VALUE, answerCallBack);
+    public void ask(String user, String question, Consumer<Answer> onAnswer) {
+        ask(user, question, Integer.MAX_VALUE, onAnswer);
     }
 
     /**
      * 异步问答，限制回答字数
      *
-     * @param user           用户
-     * @param question       问题
-     * @param answerCallBack 答案call-back
-     * @param limitTokens    限制大小
+     * @param user        用户
+     * @param question    问题
+     * @param limitTokens 限制大小
      */
-    public abstract void ask(String user, String question, Integer limitTokens, Consumer<Answer> answerCallBack);
+    public abstract void ask(String user, String question, Integer limitTokens, Consumer<Answer> onAnswer);
 
     @Setter
     @Getter

@@ -1,6 +1,6 @@
 package com.staringpig.framework.openai.model;
 
-import com.staringpig.framework.openai.OpenAI;
+import com.staringpig.framework.openai.openai.OpenAI;
 import com.staringpig.framework.openai.session.SessionManager;
 import com.theokanning.openai.completion.CompletionRequest;
 import com.theokanning.openai.completion.CompletionResult;
@@ -50,13 +50,34 @@ public abstract class CompletionModel extends OpenAIModel {
 
     @Override
     public Answer ask(String user, String question, Integer limitTokens) {
-
         List<Moderation> moderation = super.moderation(question);
         if ($.isNotEmpty(moderation)) {
             return new Answer(moderation);
         }
+        return buildAnswer(super.openAI.createCompletion(buildRequest(user, question, limitTokens)));
+    }
 
-        CompletionResult completion = super.openAI.createCompletion(CompletionRequest.builder()
+    @Override
+    public void ask(String user, String question, Integer limitTokens, Consumer<Answer> onAnswer) {
+        List<Moderation> moderation = super.moderation(question);
+        if ($.isNotEmpty(moderation)) {
+            onAnswer.accept(new Answer(moderation));
+        }
+        super.openAI.createCompletion(buildRequest(user, question, limitTokens),
+                completionResult -> onAnswer.accept(buildAnswer(completionResult)));
+    }
+
+    private Answer buildAnswer(CompletionResult completion) {
+        StringBuilder answer = new StringBuilder();
+        for (int i = 0; i < super.metadata.getN(); i++) {
+            answer.append(StringUtil.trimWhitespace(completion.getChoices().get(i).getText()));
+        }
+        return new Answer(completion.getUsage().getTotalTokens(),
+                super.cost(completion.getUsage().getTotalTokens()), answer.toString());
+    }
+
+    private CompletionRequest buildRequest(String user, String question, Integer limitTokens) {
+        return CompletionRequest.builder()
                 .model(this.getId())
                 .prompt(question)
                 .temperature(super.metadata.getTemperature())
@@ -72,17 +93,6 @@ public abstract class CompletionModel extends OpenAIModel {
                 .presencePenalty(this.metadata.getPresencePenalty())
                 .stream(this.metadata.getStream())
                 .suffix(this.suffix)
-                .build());
-        StringBuilder answer = new StringBuilder();
-        for (int i = 0; i < super.metadata.getN(); i++) {
-            answer.append(StringUtil.trimWhitespace(completion.getChoices().get(i).getText()));
-        }
-        return new Answer(completion.getUsage().getTotalTokens(),
-                super.cost(completion.getUsage().getTotalTokens()), answer.toString());
-    }
-
-    @Override
-    public void ask(String user, String question, Integer limitTokens, Consumer<Answer> answerCallBack) {
-
+                .build();
     }
 }

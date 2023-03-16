@@ -8,8 +8,9 @@ import com.theokanning.openai.completion.chat.ChatMessageRole;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
-public class ChatSession extends BaseSession<ChatModel> implements Session<ChatModel> {
+public class ChatSession extends BaseSession<ChatModel> implements Session {
 
     private Long totalToken;
     private final Long tokenThreshold;
@@ -37,11 +38,14 @@ public class ChatSession extends BaseSession<ChatModel> implements Session<ChatM
     @Override
     public OpenAIModel.Answer ask(String question, Integer limitToken) {
         OpenAIModel.Answer answer = this.model.ask(user, question, limitToken, this.chatMessages);
-
         if (answer.hasModeration()) {
             return answer;
         }
+        rebuildSession(question, answer);
+        return answer;
+    }
 
+    private void rebuildSession(String question, OpenAIModel.Answer answer) {
         this.chatMessages.add(new ChatMessage(ChatMessageRole.USER.value(), question));
         this.chatMessages.add(new ChatMessage(ChatMessageRole.ASSISTANT.value(), answer.getText()));
         this.totalToken += answer.getTotalTokens();
@@ -52,6 +56,20 @@ public class ChatSession extends BaseSession<ChatModel> implements Session<ChatM
         }
 
         this.model.saveSession(this);
-        return answer;
+    }
+
+    @Override
+    public void ask(String question, Consumer<OpenAIModel.Answer> answerConsumer) {
+        ask(question, Integer.MAX_VALUE, answerConsumer);
+    }
+
+    @Override
+    public void ask(String question, Integer limitToken, Consumer<OpenAIModel.Answer> answerConsumer) {
+        this.model.ask(user, question, limitToken, this.chatMessages, answer -> {
+            if (!answer.hasModeration()) {
+                rebuildSession(question, answer);
+            }
+            answerConsumer.accept(answer);
+        });
     }
 }

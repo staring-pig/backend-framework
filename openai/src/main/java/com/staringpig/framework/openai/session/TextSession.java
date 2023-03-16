@@ -2,7 +2,6 @@ package com.staringpig.framework.openai.session;
 
 import com.staringpig.framework.openai.model.CompletionModel;
 import com.staringpig.framework.openai.model.OpenAIModel;
-import com.theokanning.openai.moderation.Moderation;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,8 +13,9 @@ import net.dreamlu.mica.core.utils.$;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
-public class TextSession extends BaseSession<CompletionModel> implements Session<CompletionModel> {
+public class TextSession extends BaseSession<CompletionModel> implements Session {
 
     public static final String END_OF_TEXT = "<|endoftext|>";
     public static final String NEW_LINE = "\n";
@@ -49,12 +49,18 @@ public class TextSession extends BaseSession<CompletionModel> implements Session
     @Override
     public OpenAIModel.Answer ask(String question, Integer limitToken) {
 
-        List<Moderation> moderation = this.model.moderation(question);
-        if ($.isNotEmpty(moderation)) {
-            return new OpenAIModel.Answer(moderation);
+        OpenAIModel.Answer answer = this.model.ask(this.user, buildQuestion(question), limitToken);
+
+        if (answer.hasModeration()) {
+            return new OpenAIModel.Answer(answer.getModeration());
         }
 
-        OpenAIModel.Answer answer = this.model.ask(this.user, buildQuestion(question), limitToken);
+        rebuildSession(question, answer);
+
+        return answer;
+    }
+
+    private void rebuildSession(String question, OpenAIModel.Answer answer) {
         this.completions.add(new Completion(question, answer.getText(), answer.getTotalTokens()));
 
         if (this.completions.stream().map(Completion::getTotalToken).mapToInt(Long::intValue).sum()
@@ -63,7 +69,21 @@ public class TextSession extends BaseSession<CompletionModel> implements Session
         }
 
         this.model.saveSession(this);
-        return answer;
+    }
+
+    @Override
+    public void ask(String question, Consumer<OpenAIModel.Answer> answerConsumer) {
+        ask(question, Integer.MAX_VALUE, answerConsumer);
+    }
+
+    @Override
+    public void ask(String question, Integer limitToken, Consumer<OpenAIModel.Answer> answerConsumer) {
+        this.model.ask(this.user, buildQuestion(question), limitToken, answer -> {
+            if (!answer.hasModeration()) {
+                rebuildSession(question, answer);
+            }
+            answerConsumer.accept(answer);
+        });
     }
 
     private String buildQuestion(String question) {
