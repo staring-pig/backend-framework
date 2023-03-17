@@ -66,7 +66,7 @@ public abstract class OpenAIModel {
      */
     protected static Integer tokens(String content) {
         return chineseTokens(content) +
-                gpt2Tokenizer.encode(content.replaceAll(MULTI_CHINESE_PATTERN_STRING, StringUtils.EMPTY)).size();
+                gpt2Tokenizer.encode(content.replaceAll(MULTI_CHINESE_PATTERN_STRING, StringUtils.SPACE)).size();
     }
 
     private static Integer chineseTokens(String content) {
@@ -124,7 +124,7 @@ public abstract class OpenAIModel {
     /**
      * 保存session
      */
-    public <M extends OpenAIModel> void saveSession(Session session) {
+    public void saveSession(Session session) {
         sessionManager.save(session);
     }
 

@@ -9,6 +9,7 @@ import com.staringpig.framework.wechat.client.api.offi.SendTemplateMessageComman
 import com.staringpig.framework.wechat.client.api.offi.UploadVoiceCommand;
 import com.staringpig.framework.wechat.client.api.offi.UserInfoQuery;
 import com.staringpig.framework.wechat.client.api.offi.webpage.OAWebPageAccessCommand;
+import com.staringpig.framework.wechat.client.api.offi.webpage.OAWebPageJsTicketCommand;
 import com.staringpig.framework.wechat.client.api.offi.webpage.OAWebPageUserInfoQuery;
 import com.staringpig.framework.wechat.offiaccount.menu.OffiAccountMenu;
 import feign.Headers;
@@ -57,6 +58,12 @@ public interface OffiAccountClient {
      */
     @RequestLine("POST /cgi-bin/get_current_selfmenu_info?access_token={accessToken}")
     MenuQuery.Result queryMenu(@Param("accessToken") String accessToken);
+
+    /**
+     * 微信网页授权access_token获取js-ticket
+     */
+    @RequestLine("POST /cgi-bin/ticket/getticket?access_token={accessToken}&type=jsapi")
+    OAWebPageJsTicketCommand.Result oaWebPageTicket(@Param("accessToken") String accessToken);
 
     /**
      * 微信网页授权-code换取access_token
