@@ -66,7 +66,8 @@ public abstract class OpenAIModel {
      */
     protected static Integer tokens(String content) {
         return chineseTokens(content) +
-                gpt2Tokenizer.encode(content.replaceAll(MULTI_CHINESE_PATTERN_STRING, StringUtils.SPACE)).size();
+                gpt2Tokenizer.encode(content.replaceAll(MULTI_CHINESE_PATTERN_STRING, StringUtils.SPACE)
+                        .replace("\"", "'")).size();
     }
 
     private static Integer chineseTokens(String content) {
