@@ -81,7 +81,7 @@ public abstract class CompletionModel extends OpenAIModel {
                 .model(this.getId())
                 .prompt(question)
                 .temperature(super.metadata.getTemperature())
-                .maxTokens(Math.min(this.maxTokens, limitTokens) - OpenAIModel.tokens(question))
+                .maxTokens(Math.min(this.maxTokens, limitTokens) - OpenAIModel.tokens(question) - 10)
                 .user(user)
                 .n(super.metadata.getN())
                 .stop(this.metadata.getStop())

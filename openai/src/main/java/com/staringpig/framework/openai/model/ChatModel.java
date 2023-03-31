@@ -74,7 +74,7 @@ public abstract class ChatModel extends OpenAIModel {
                 .model(this.getId())
                 .messages(newChatMessage)
                 .temperature(super.metadata.getTemperature())
-                .maxTokens(Math.min(this.maxTokens, limitTokens) - questionTokens)
+                .maxTokens(Math.min(this.maxTokens, limitTokens) - questionTokens - 10)
                 .user(user)
                 .n(super.metadata.getN())
                 .stop(this.metadata.getStop())
