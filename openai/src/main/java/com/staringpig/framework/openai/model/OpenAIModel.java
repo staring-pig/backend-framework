@@ -64,7 +64,7 @@ public abstract class OpenAIModel {
     /**
      * 计算请求消耗的tokens
      */
-    protected static Integer tokens(String content) {
+    public static Integer tokens(String content) {
         return chineseTokens(content) +
                 gpt2Tokenizer.encode(content.replaceAll(MULTI_CHINESE_PATTERN_STRING, StringUtils.SPACE)
                         .replace("\"", "'")).size();

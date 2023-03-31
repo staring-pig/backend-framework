@@ -62,13 +62,16 @@ public class TextSession extends BaseSession<CompletionModel> implements Session
 
     private void rebuildSession(String question, OpenAIModel.Answer answer) {
         this.completions.add(new Completion(question, answer.getText(), answer.getTotalTokens()));
+        adjustSession();
+        this.model.saveSession(this);
+    }
 
+    private void adjustSession() {
         if (this.completions.stream().map(Completion::getTotalToken).mapToInt(Long::intValue).sum()
                 >= this.tokenThreshold) {
             this.completions.remove(0);
+            adjustSession();
         }
-
-        this.model.saveSession(this);
     }
 
     @Override

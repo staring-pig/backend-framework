@@ -53,13 +53,21 @@ public abstract class ChatModel extends OpenAIModel {
                                                List<ChatMessage> chatMessages) {
 
         List<ChatMessage> newChatMessage = new ArrayList<>(chatMessages);
-        newChatMessage.add(new ChatMessage(ChatMessageRole.USER.value(), question));
+        ChatMessage currentChatMessage = new ChatMessage(ChatMessageRole.USER.value(), question);
+        newChatMessage.add(currentChatMessage);
 
         int questionTokens = 0;
         for (ChatMessage chatMessage : newChatMessage) {
             questionTokens += 4;
             questionTokens += OpenAIModel.tokens(chatMessage.getRole());
             questionTokens += OpenAIModel.tokens(chatMessage.getContent());
+        }
+
+        if (Math.min(this.maxTokens, limitTokens) <= questionTokens) {
+            newChatMessage.clear();
+            newChatMessage.add(currentChatMessage);
+            questionTokens = 4 + OpenAIModel.tokens(currentChatMessage.getRole()) +
+                    OpenAIModel.tokens(currentChatMessage.getContent());
         }
 
         return ChatCompletionRequest.builder()
