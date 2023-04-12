@@ -10,6 +10,7 @@
         <module>wechat</module>
         <module>bom</module>
         <module>openai</module>
+        <module>ai</module>
     </modules>
 
     <groupId>com.staringpig.framework</groupId>
