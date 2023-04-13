@@ -1,13 +1,16 @@
 package com.staringpig.framework.ai.model;
 
-import com.staringpig.framework.ai.capability.Capability;
+import lombok.Getter;
 
-import java.util.Set;
-
-public interface AIModel {
+public abstract class AIModel {
 
     /**
-     * AI 模型的能力s
+     * 模型名称
      */
-    Set<Capability> capabilities();
+    @Getter
+    private final String name;
+
+    public AIModel(String name) {
+        this.name = name;
+    }
 }

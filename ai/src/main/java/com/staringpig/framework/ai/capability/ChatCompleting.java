@@ -21,11 +21,4 @@ public interface ChatCompleting extends Completing {
     abstract class ChatPrompt extends Prompt {
 
     }
-
-    /**
-     * 指令
-     */
-    abstract class Instruction extends Prompt {
-
-    }
 }

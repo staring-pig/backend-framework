@@ -13,7 +13,7 @@ public interface Completing extends Capability {
     /**
      * 完成后的内容
      */
-    public interface Completion {
+    public abstract class Completion {
 
     }
 }

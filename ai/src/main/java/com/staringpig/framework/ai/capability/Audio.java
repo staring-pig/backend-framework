@@ -1,7 +1,7 @@
 package com.staringpig.framework.ai.capability;
 
 /**
- * 图片
+ * audio
  */
-public abstract class Image {
+public abstract class Audio {
 }
