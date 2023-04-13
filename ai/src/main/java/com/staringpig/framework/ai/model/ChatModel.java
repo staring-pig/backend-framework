@@ -7,4 +7,6 @@ public abstract class ChatModel extends AIModel implements ChatCompleting {
     public ChatModel(String name) {
         super(name);
     }
+
+    abstract ChatContext context(String chat);
 }
