@@ -1,6 +1,8 @@
 package com.staringpig.framework.ai.capability;
 
+import java.util.function.Consumer;
+
 public interface VoiceGenerate extends Capability {
 
-    Voice generate(Prompt prompt);
+    void generate(Prompt prompt, Consumer<Voice> onReply);
 }

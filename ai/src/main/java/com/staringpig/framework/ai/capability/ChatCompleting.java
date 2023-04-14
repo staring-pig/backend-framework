@@ -1,6 +1,9 @@
 package com.staringpig.framework.ai.capability;
 
+import net.dreamlu.mica.core.utils.StringPool;
+
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * 聊天提示
@@ -8,43 +11,38 @@ import java.util.List;
 public interface ChatCompleting extends Completing {
 
     /**
+     * 开启一个会话
+     */
+    String openChat();
+
+    /**
      * 指使
      */
-    void instructing(ChatInstruction instruction);
+    void instruct(String chat, Instruction instruction);
 
     /**
      * 聊天补全
      */
-    ChatCompletion chat(ChatPrompt prompt);
+    void chat(String chat, CompletingPrompt prompt, Consumer<ChatCompletion> onReply);
 
     /**
-     * chat 的 指令
+     * 不带chat的自动补全方式
      */
-    class ChatInstruction extends Instruction {
-
-        /**
-         * 某一个chat会话
-         */
-        private String chat;
+    @Override
+    default void complete(CompletingPrompt prompt, Consumer<Completion> onReply) {
+        chat(StringPool.EMPTY, prompt, onReply::accept);
     }
-
-    /**
-     * 聊天文本
-     */
-    class ChatPrompt extends CompletingPrompt {
-
-        /**
-         * 某一个chat会话
-         */
-        private String chat;
-    }
-
 
     class ChatCompletion extends Completion {
         /**
          * 某个chat
          */
         private String chat;
+
+        public ChatCompletion(String chat, Completion completion) {
+            super(completion);
+            this.chat = chat;
+        }
     }
 
     /**
@@ -54,7 +52,7 @@ public interface ChatCompleting extends Completing {
         /**
          * 指令，可能为空
          */
-        private Instruction instruction;
+        private List<Instruction> instructions;
         /**
          * 提示语
          */
@@ -74,8 +72,20 @@ public interface ChatCompleting extends Completing {
          */
         private String chat;
         /**
-         * 历史聊天信息
+         * 历史对话
          */
         private List<Dialogue> dialogues;
+        /**
+         * 新指令
+         */
+        private List<Instruction> newInstructions;
+
+        public ChatContext(String chat) {
+            this.chat = chat;
+        }
+
+        public void instruct(Instruction instruction) {
+            this.newInstructions.add(instruction);
+        }
     }
 }
