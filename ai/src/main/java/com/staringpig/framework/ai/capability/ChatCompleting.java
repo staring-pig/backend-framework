@@ -1,7 +1,10 @@
 package com.staringpig.framework.ai.capability;
 
+import lombok.Getter;
+import net.dreamlu.mica.core.utils.$;
 import net.dreamlu.mica.core.utils.StringPool;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -37,7 +40,8 @@ public interface ChatCompleting extends Completing {
         /**
          * 某个chat
          */
-        private String chat;
+        @Getter
+        private final String chat;
 
         public ChatCompletion(String chat, Completion completion) {
             super(completion);
@@ -52,14 +56,17 @@ public interface ChatCompleting extends Completing {
         /**
          * 指令，可能为空
          */
+        @Getter
         private List<Instruction> instructions;
         /**
          * 提示语
          */
+        @Getter
         private CompletingPrompt prompt;
         /**
          * 完成
          */
+        @Getter
         private Completion completion;
     }
 
@@ -70,22 +77,37 @@ public interface ChatCompleting extends Completing {
         /**
          * 某一个chat会话
          */
-        private String chat;
+        @Getter
+        private final String chat;
         /**
          * 历史对话
          */
+        @Getter
         private List<Dialogue> dialogues;
         /**
          * 新指令
          */
+        @Getter
         private List<Instruction> newInstructions;
 
         public ChatContext(String chat) {
             this.chat = chat;
+            this.dialogues = new ArrayList<>();
+            this.newInstructions = new ArrayList<>();
         }
 
         public void instruct(Instruction instruction) {
             this.newInstructions.add(instruction);
+        }
+
+        public void toDialogue(CompletingPrompt prompt, Completion completion) {
+            Dialogue newDialogue = new Dialogue();
+            if ($.isNotEmpty(this.newInstructions)) {
+                newDialogue.instructions = this.newInstructions;
+            }
+            newDialogue.prompt = prompt;
+            newDialogue.completion = completion;
+            this.dialogues.add(newDialogue);
         }
     }
 }

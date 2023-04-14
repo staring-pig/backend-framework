@@ -11,5 +11,9 @@ public abstract class Prompt {
      * 提示语的内容
      */
     @Getter
-    private String content;
+    private final String content;
+
+    public Prompt(String content) {
+        this.content = content;
+    }
 }

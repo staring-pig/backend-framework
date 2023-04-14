@@ -1,6 +1,7 @@
 package com.staringpig.framework.ai.endpoint.openai.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.staringpig.framework.ai.usage.TokensUsage;
 import lombok.Data;
 
 /**
@@ -25,4 +26,8 @@ public class Usage {
      */
     @JsonProperty("total_tokens")
     long totalTokens;
+
+    public TokensUsage convert() {
+        return new TokensUsage(promptTokens, completionTokens, totalTokens);
+    }
 }

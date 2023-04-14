@@ -20,7 +20,12 @@ public interface Completing extends Capability {
     class CompletingPrompt extends Prompt {
 
         @Getter
-        private String user;
+        private final String user;
+
+        public CompletingPrompt(String user, String content) {
+            super(content);
+            this.user = user;
+        }
     }
 
     /**
@@ -30,10 +35,15 @@ public interface Completing extends Capability {
         /**
          * 内容
          */
+        @Getter
         private String content;
 
         public Completion(Completion completion) {
             this.content = completion.content;
+        }
+
+        public Completion(String content) {
+            this.content = content;
         }
     }
 }

@@ -64,7 +64,7 @@ public class ChatCompletionRequest {
      * be (4096 - prompt tokens).
      */
     @JsonProperty("max_tokens")
-    Integer maxTokens;
+    Long maxTokens;
 
     /**
      * Number between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far,

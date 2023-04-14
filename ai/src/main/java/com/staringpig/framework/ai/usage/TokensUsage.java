@@ -1,8 +1,11 @@
 package com.staringpig.framework.ai.usage;
 
+import lombok.AllArgsConstructor;
+
 /**
  * tokens的使用
  */
+@AllArgsConstructor
 public class TokensUsage extends Usage {
 
     /**

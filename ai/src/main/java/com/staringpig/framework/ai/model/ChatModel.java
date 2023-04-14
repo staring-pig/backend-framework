@@ -2,15 +2,17 @@ package com.staringpig.framework.ai.model;
 
 import com.staringpig.framework.ai.capability.ChatCompleting;
 import com.staringpig.framework.ai.capability.Instruction;
+import com.staringpig.framework.ai.usage.Costing;
 import com.staringpig.framework.ai.usage.Usage;
 
 import java.util.function.Consumer;
 
 public abstract class ChatModel<T extends Usage> extends AIModel<T> implements ChatCompleting {
+
     protected ChatContextStore chatContextStore;
 
-    public ChatModel(String name, ChatContextStore chatContextStore) {
-        super(name);
+    public ChatModel(String name, Costing<T> costing, ChatContextStore chatContextStore) {
+        super(name, costing);
         this.chatContextStore = chatContextStore;
     }
 
@@ -20,14 +22,18 @@ public abstract class ChatModel<T extends Usage> extends AIModel<T> implements C
 
     @Override
     public void instruct(String chat, Instruction instruction) {
-        this.context(chat).instruct(instruction);
+        ChatContext context = this.context(chat);
+        context.instruct(instruction);
+        this.chatContextStore.save(context);
     }
 
     @Override
     public void chat(String chat, CompletingPrompt prompt, Consumer<ChatCompletion> onReply) {
-        chat(this.context(chat), prompt, reply -> {
-
+        ChatContext context = this.context(chat);
+        chat(context, prompt, reply -> {
             onReply.accept(new ChatCompletion(chat, reply));
+            context.toDialogue(prompt, reply);
+            this.chatContextStore.save(context);
         });
     }
 
