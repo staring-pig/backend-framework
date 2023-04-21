@@ -1,5 +1,8 @@
 package com.staringpig.framework.ai.capability;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.function.Consumer;
 
 /**
@@ -12,11 +15,13 @@ public interface Moderating extends Capability {
      */
     void moderate(String input, Consumer<Moderation> onReply);
 
+    @Getter
+    @Setter
     abstract class Moderation {
 
         /**
          * Set to true if the model classifies the content as violating content policy, false otherwise
          */
-        public boolean flagged;
+        private boolean flagged;
     }
 }

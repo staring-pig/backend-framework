@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.staringpig.framework.ai.endpoint.Endpoint;
 import com.staringpig.framework.ai.endpoint.openai.api.ChatCompletionRequest;
 import com.staringpig.framework.ai.endpoint.openai.api.ChatCompletionResult;
+import com.staringpig.framework.ai.endpoint.openai.api.ModerationRequest;
+import com.staringpig.framework.ai.endpoint.openai.api.ModerationResult;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.HttpException;
@@ -25,6 +27,10 @@ public class OpenAIEndpoint implements Endpoint {
 
     public void chat(ChatCompletionRequest request, Consumer<ChatCompletionResult> consumer) {
         api.createChatCompletion(request).enqueue(new OpenAICallback<>(consumer));
+    }
+
+    public void moderate(ModerationRequest request, Consumer<ModerationResult> consumer) {
+        api.createModeration(request).enqueue(new OpenAICallback<>(consumer));
     }
 
     public static class OpenAICallback<T> implements Callback<T> {

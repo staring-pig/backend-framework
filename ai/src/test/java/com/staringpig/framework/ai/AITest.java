@@ -19,7 +19,6 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.jackson.JacksonConverterFactory;
 
-import java.math.BigDecimal;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.Optional;
@@ -29,7 +28,7 @@ public class AITest {
 
     public static void main(String[] args) {
         ObjectMapper mapper = defaultObjectMapper();
-        Gpt_3_5_Turbo model = new Gpt_3_5_Turbo("gpt-3.5-turbo",
+        Gpt_3_5_Turbo model = new Gpt_3_5_Turbo(
                 (user, model1, usage) ->
                         System.out.println("cost:" + user + model1.getName() + usage.toString()),
                 new ChatContextStore() {
@@ -58,8 +57,7 @@ public class AITest {
                 new UtilsEndpoint(new Retrofit.Builder()
                         .baseUrl("http://127.0.0.1:5000")
                         .addConverterFactory(JacksonConverterFactory.create(mapper))
-                        .build().create(TokenizerAPI.class)),
-                4096L, BigDecimal.valueOf(0.002));
+                        .build().create(TokenizerAPI.class)));
 
         String chat = model.openChat();
         model.instruct(chat, new Instruction("你是一个聊天工具") {
@@ -68,7 +66,8 @@ public class AITest {
                 return "你是一个聊天工具";
             }
         });
-        model.chat(chat, new Completing.CompletingPrompt("user", "你好呀"), System.out::println);
+        model.chat(chat, new Completing.CompletingPrompt("user", "你好呀"),
+                chatCompletion -> System.out.println(chatCompletion.getContent()));
     }
 
     public static ObjectMapper defaultObjectMapper() {

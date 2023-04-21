@@ -9,13 +9,12 @@
     <modules>
         <module>wechat</module>
         <module>bom</module>
-        <module>openai</module>
         <module>ai</module>
     </modules>
 
-    <groupId>com.staringpig.framework</groupId>
-    <artifactId>parent</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <groupId>com.staringpig</groupId>
+    <artifactId>framework</artifactId>
+    <version>1.3-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

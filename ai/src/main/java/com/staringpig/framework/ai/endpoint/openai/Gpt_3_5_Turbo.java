@@ -6,18 +6,13 @@ import com.staringpig.framework.ai.usage.Costing;
 import com.staringpig.framework.ai.usage.TokensUsage;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
-public class Gpt_3_5_Turbo extends OpenAIChatModel {
+public final class Gpt_3_5_Turbo extends OpenAIChatModel {
 
-    public Gpt_3_5_Turbo(String modelName, Costing<TokensUsage> costing, ChatContextStore chatContextStore,
-                         OpenAIEndpoint endpoint, UtilsEndpoint utilsEndpoint, Long maxTokens,
-                         BigDecimal pricePerThousandTokens) {
-        super(modelName, costing, chatContextStore, endpoint, utilsEndpoint, maxTokens, pricePerThousandTokens);
+    public Gpt_3_5_Turbo(Costing<TokensUsage> costing, ChatContextStore chatContextStore, OpenAIEndpoint endpoint,
+                         UtilsEndpoint utilsEndpoint) {
+        super("gpt-3.5-turbo", costing, chatContextStore, endpoint, utilsEndpoint, 4096L,
+                BigDecimal.valueOf(0.002));
     }
 
-    @Override
-    public String openChat() {
-        return UUID.randomUUID().toString();
-    }
 }
