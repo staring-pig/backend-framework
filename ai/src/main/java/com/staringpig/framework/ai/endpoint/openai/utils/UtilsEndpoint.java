@@ -1,14 +1,12 @@
 package com.staringpig.framework.ai.endpoint.openai.utils;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.staringpig.framework.ai.endpoint.Endpoint;
 import com.staringpig.framework.ai.endpoint.openai.api.ChatMessage;
+import com.staringpig.framework.ai.endpoint.openai.api.CountTokensCommand;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UtilsEndpoint implements Endpoint {
 
@@ -18,19 +16,20 @@ public class UtilsEndpoint implements Endpoint {
         this.tokenizerAPI = tokenizerAPI;
     }
 
-    public Long countTokens(List<ChatMessage> chatMessages) {
+    public Long countTokens(String model, List<ChatMessage> chatMessages) {
         try {
-            return tokenizerAPI.countTokens(defaultObjectMapper().writeValueAsString(chatMessages)).execute().body();
+            return tokenizerAPI.countTokens(CountTokensCommand.builder()
+                    .model(model)
+                    .content(chatMessages.stream()
+                            .map(msg -> CountTokensCommand.ChatMessage.builder()
+                                    .name(msg.getName())
+                                    .role(msg.getRole())
+                                    .content(msg.getContent())
+                                    .build())
+                            .collect(Collectors.toList()))
+                    .build()).execute().body();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("");
         }
-    }
-
-    public static ObjectMapper defaultObjectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        mapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
-        return mapper;
     }
 }

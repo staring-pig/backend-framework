@@ -63,7 +63,7 @@ public abstract class OpenAIChatModel extends ChatModel<TokensUsage> {
                 .model(this.getName())
                 .messages(chatMessages)
                 .n(1)
-                .maxTokens(this.maxTokens - utilsEndpoint.countTokens(chatMessages) - 1)
+                .maxTokens(this.maxTokens - utilsEndpoint.countTokens(this.getName(), chatMessages) - 1)
                 .build();
         this.endpoint.chat(request, reply -> {
             super.cost(prompt.getUser(), reply.getUsage().convert());

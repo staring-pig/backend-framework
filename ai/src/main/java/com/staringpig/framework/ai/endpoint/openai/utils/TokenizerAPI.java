@@ -1,11 +1,12 @@
 package com.staringpig.framework.ai.endpoint.openai.utils;
 
+import com.staringpig.framework.ai.endpoint.openai.api.CountTokensCommand;
 import retrofit2.Call;
-import retrofit2.http.GET;
-import retrofit2.http.Query;
+import retrofit2.http.Body;
+import retrofit2.http.POST;
 
 public interface TokenizerAPI {
 
-    @GET("/tokenizer/tokens")
-    Call<Long> countTokens(@Query("content") String content);
+    @POST("/tokenizer/tokens")
+    Call<Long> countTokens(@Body CountTokensCommand command);
 }

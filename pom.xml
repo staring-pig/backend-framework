@@ -10,6 +10,7 @@
         <module>wechat</module>
         <module>bom</module>
         <module>ai</module>
+        <module>starters</module>
     </modules>
 
     <groupId>com.staringpig</groupId>
