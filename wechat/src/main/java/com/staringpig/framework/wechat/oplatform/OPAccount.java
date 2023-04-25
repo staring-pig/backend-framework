@@ -5,7 +5,7 @@ import lombok.Getter;
 /**
  * 开放平台用户账户
  */
-public abstract class OPAccount {
+public final class OPAccount {
 
     @Getter
     private final String unionId;
