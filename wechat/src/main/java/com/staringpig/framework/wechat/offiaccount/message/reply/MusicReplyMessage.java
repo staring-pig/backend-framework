@@ -1,8 +1,8 @@
 package com.staringpig.framework.wechat.offiaccount.message.reply;
 
+import com.staringpig.framework.support.AllInOne;
 import com.staringpig.framework.wechat.offiaccount.account.OAAccount;
 import lombok.Getter;
-import net.dreamlu.mica.core.utils.StringPool;
 
 /**
  * 图片消息
@@ -34,10 +34,10 @@ public final class MusicReplyMessage extends ReplyMessage {
     public MusicReplyMessage(OAAccount oaAccount, Long createTime, String thumbMediaId) {
         super(oaAccount, createTime, Type.music);
         this.thumbMediaId = thumbMediaId;
-        this.musicURL = StringPool.EMPTY;
-        this.title = StringPool.EMPTY;
-        this.description = StringPool.EMPTY;
-        this.hqMusicUrl = StringPool.EMPTY;
+        this.musicURL = AllInOne.STRING_EMPTY;
+        this.title = AllInOne.STRING_EMPTY;
+        this.description = AllInOne.STRING_EMPTY;
+        this.hqMusicUrl = AllInOne.STRING_EMPTY;
     }
 
     public MusicReplyMessage(OAAccount oaAccount, Long createTime, String thumbMediaId,

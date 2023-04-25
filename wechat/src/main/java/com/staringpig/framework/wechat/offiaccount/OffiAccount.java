@@ -12,7 +12,7 @@ import java.util.List;
  * 公众号应用
  */
 
-public abstract class OffiAccount {
+public class OffiAccount {
     /**
      * appId
      */
@@ -37,7 +37,6 @@ public abstract class OffiAccount {
         this.token = token;
         this.endpoint = endpoint;
     }
-
 
 
     public UserInfo userInfo(String openId) {

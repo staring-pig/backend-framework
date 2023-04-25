@@ -9,8 +9,8 @@ import com.staringpig.framework.ai.model.ChatContextStore;
 import com.staringpig.framework.ai.model.ChatModel;
 import com.staringpig.framework.ai.usage.Costing;
 import com.staringpig.framework.ai.usage.TokensUsage;
+import com.staringpig.framework.support.AllInOne;
 import lombok.Getter;
-import net.dreamlu.mica.core.utils.$;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -39,10 +39,10 @@ public abstract class OpenAIChatModel extends ChatModel<TokensUsage> {
     protected void chat(ChatContext context, CompletingPrompt prompt, Consumer<Completion> onReply) {
         List<ChatMessage> chatMessages = new ArrayList<>();
         List<Dialogue> dialogues = context.getDialogues();
-        if ($.isNotEmpty(dialogues)) {
+        if (AllInOne.isNotEmpty(dialogues)) {
             for (Dialogue dialogue : dialogues) {
                 List<Instruction> instructions = dialogue.getInstructions();
-                if ($.isNotEmpty(instructions)) {
+                if (AllInOne.isNotEmpty(instructions)) {
                     for (Instruction instruction : instructions) {
                         chatMessages.add(new ChatMessage(ChatMessageRole.SYSTEM.value(), instruction.getContent()));
                     }
@@ -53,7 +53,7 @@ public abstract class OpenAIChatModel extends ChatModel<TokensUsage> {
                         dialogue.getCompletion().getContent()));
             }
         }
-        if ($.isNotEmpty(context.getNewInstructions())) {
+        if (AllInOne.isNotEmpty(context.getNewInstructions())) {
             for (Instruction instruction : context.getNewInstructions()) {
                 chatMessages.add(new ChatMessage(ChatMessageRole.SYSTEM.value(), instruction.getContent()));
             }

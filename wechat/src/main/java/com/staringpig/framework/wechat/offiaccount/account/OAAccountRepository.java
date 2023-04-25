@@ -17,5 +17,5 @@ public interface OAAccountRepository<T extends OAAccount> {
      */
     Optional<T> queryByOpenId(String openId);
 
-    T saveByUserInfo(OffiAccount.UserInfo userInfo);
+    T saveByUserInfo(String appId, OffiAccount.UserInfo userInfo);
 }

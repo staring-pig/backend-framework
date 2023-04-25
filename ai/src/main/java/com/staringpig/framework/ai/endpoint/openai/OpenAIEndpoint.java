@@ -1,14 +1,11 @@
 package com.staringpig.framework.ai.endpoint.openai;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.staringpig.framework.ai.endpoint.Endpoint;
 import com.staringpig.framework.ai.endpoint.openai.api.ChatCompletionRequest;
 import com.staringpig.framework.ai.endpoint.openai.api.ChatCompletionResult;
 import com.staringpig.framework.ai.endpoint.openai.api.ModerationRequest;
 import com.staringpig.framework.ai.endpoint.openai.api.ModerationResult;
+import com.staringpig.framework.support.AllInOne;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.HttpException;
@@ -36,7 +33,6 @@ public class OpenAIEndpoint implements Endpoint {
     public static class OpenAICallback<T> implements Callback<T> {
 
         private final Consumer<T> consumer;
-        protected static final ObjectMapper errorMapper = defaultObjectMapper();
 
         public OpenAICallback(Consumer<T> consumer) {
             this.consumer = consumer;
@@ -49,8 +45,8 @@ public class OpenAIEndpoint implements Endpoint {
             } else {
                 OpenAiError error;
                 try {
-                    error = errorMapper.readValue(Objects.requireNonNull(response.errorBody()).string(),
-                            OpenAiError.class);
+                    error = AllInOne.DEFAULT_OBJECT_MAPPER.readValue(
+                            Objects.requireNonNull(response.errorBody()).string(), OpenAiError.class);
                 } catch (IOException e) {
                     e.printStackTrace();
                     throw new RuntimeException(e);
@@ -69,21 +65,13 @@ public class OpenAIEndpoint implements Endpoint {
                     }
                     String errorBody = e.response().errorBody().string();
 
-                    OpenAiError error = errorMapper.readValue(errorBody, OpenAiError.class);
+                    OpenAiError error = AllInOne.DEFAULT_OBJECT_MAPPER.readValue(errorBody, OpenAiError.class);
                     throw new OpenAiHttpException(error, e, e.code());
                 } catch (IOException ex) {
                     // couldn't parse OpenAI error
                     throw e;
                 }
             }
-        }
-
-        public static ObjectMapper defaultObjectMapper() {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-            mapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
-            return mapper;
         }
     }
 }

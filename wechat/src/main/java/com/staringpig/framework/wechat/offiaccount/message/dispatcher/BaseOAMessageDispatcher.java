@@ -1,8 +1,8 @@
 package com.staringpig.framework.wechat.offiaccount.message.dispatcher;
 
+import com.staringpig.framework.support.AllInOne;
 import com.staringpig.framework.wechat.offiaccount.message.OAMessage;
 import com.staringpig.framework.wechat.offiaccount.message.OAMessageHandler;
-import net.dreamlu.mica.core.utils.$;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -24,7 +24,7 @@ public abstract class BaseOAMessageDispatcher implements OAMessageDispatcher {
      */
     @Override
     public void registerMessageHandler(Collection<OAMessageHandler<? extends OAMessage>> oaMessageHandlers) {
-        if ($.isEmpty(messageHandlers)) {
+        if (AllInOne.isEmpty(messageHandlers)) {
             this.messageHandlers = new HashSet<>();
         }
         this.messageHandlers.addAll(oaMessageHandlers);

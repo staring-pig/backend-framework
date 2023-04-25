@@ -1,8 +1,7 @@
 package com.staringpig.framework.ai.capability;
 
+import com.staringpig.framework.support.AllInOne;
 import lombok.Getter;
-import net.dreamlu.mica.core.utils.$;
-import net.dreamlu.mica.core.utils.StringPool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,7 @@ public interface ChatCompleting extends Completing {
      */
     @Override
     default void complete(CompletingPrompt prompt, Consumer<Completion> onReply) {
-        chat(StringPool.EMPTY, prompt, onReply::accept);
+        chat(AllInOne.STRING_EMPTY, prompt, onReply::accept);
     }
 
     class ChatCompletion extends Completion {
@@ -102,7 +101,7 @@ public interface ChatCompleting extends Completing {
 
         public void toDialogue(CompletingPrompt prompt, Completion completion) {
             Dialogue newDialogue = new Dialogue();
-            if ($.isNotEmpty(this.newInstructions)) {
+            if (AllInOne.isNotEmpty(this.newInstructions)) {
                 newDialogue.instructions = this.newInstructions;
             }
             newDialogue.prompt = prompt;

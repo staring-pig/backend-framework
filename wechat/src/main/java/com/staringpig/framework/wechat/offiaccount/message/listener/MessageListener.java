@@ -10,8 +10,6 @@ import java.util.Optional;
  */
 public interface MessageListener {
 
-    String MESSAGE_RECEIVE_PATH = "/receive";
-
     /**
      * 当接收到消息时
      */

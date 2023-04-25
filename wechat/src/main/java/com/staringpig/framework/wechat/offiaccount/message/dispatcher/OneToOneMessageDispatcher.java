@@ -1,8 +1,8 @@
 package com.staringpig.framework.wechat.offiaccount.message.dispatcher;
 
+import com.staringpig.framework.support.AllInOne;
 import com.staringpig.framework.wechat.offiaccount.message.OAMessage;
 import com.staringpig.framework.wechat.offiaccount.message.OAMessageHandler;
-import net.dreamlu.mica.core.utils.$;
 
 import java.util.Collection;
 import java.util.Map;
@@ -26,7 +26,7 @@ public abstract class OneToOneMessageDispatcher extends BaseOAMessageDispatcher 
     @Override
     public void registerMessageHandler(Collection<OAMessageHandler<? extends OAMessage>> oaMessageHandlers) {
         super.registerMessageHandler(oaMessageHandlers);
-        if ($.isEmpty(messageHandlerMap)) {
+        if (AllInOne.isEmpty(messageHandlerMap)) {
             this.messageHandlerMap = new ConcurrentHashMap<>();
         }
         for (OAMessageHandler<? extends OAMessage> oaMessageHandler : oaMessageHandlers) {

@@ -1,8 +1,8 @@
 package com.staringpig.framework.wechat.offiaccount.message.ordinary;
 
+import com.staringpig.framework.support.AllInOne;
 import com.staringpig.framework.wechat.offiaccount.account.OAAccount;
 import lombok.Getter;
-import net.dreamlu.mica.core.utils.StringPool;
 
 /**
  * 语音消息
@@ -32,7 +32,7 @@ public final class VoiceMessage extends OrdinaryMessage {
         super(id, oaAccount, createTime, Type.voice);
         this.mediaId = mediaId;
         this.format = format;
-        this.recognition = StringPool.EMPTY;
+        this.recognition = AllInOne.STRING_EMPTY;
     }
 
     public VoiceMessage(String id, OAAccount oaAccount, Long createTime, String mediaId, Format format,

@@ -1,5 +1,6 @@
 package com.staringpig.framework.wechat.offiaccount.message.listener;
 
+import com.staringpig.framework.support.AllInOne;
 import com.staringpig.framework.wechat.offiaccount.OffiAccount;
 import com.staringpig.framework.wechat.offiaccount.account.OAAccount;
 import com.staringpig.framework.wechat.offiaccount.account.OAAccountRepository;
@@ -28,7 +29,6 @@ import com.staringpig.framework.wechat.offiaccount.message.reply.ReplyMessage;
 import com.staringpig.framework.wechat.offiaccount.message.reply.TextReplyMessage;
 import com.staringpig.framework.wechat.offiaccount.message.reply.VideoReplyMessage;
 import com.staringpig.framework.wechat.offiaccount.message.reply.VoiceReplyMessage;
-import net.dreamlu.mica.core.utils.$;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ public class NormalOAMessageConvertor implements OAMessageConvertor {
         Optional<? extends OAAccount> opAppAccount = oaAccountRepository.queryByOpenId(messageData.getFromUserName());
         if (opAppAccount.isEmpty()) {
             OffiAccount.UserInfo userInfo = offiAccount.userInfo(messageData.getFromUserName());
-            account = oaAccountRepository.saveByUserInfo(userInfo);
+            account = oaAccountRepository.saveByUserInfo(offiAccount.getAppId(), userInfo);
         } else {
             account = opAppAccount.get();
         }
@@ -81,7 +81,8 @@ public class NormalOAMessageConvertor implements OAMessageConvertor {
                 }
                 switch (eventType) {
                     case subscribe:
-                        if ($.isNotEmpty(messageData.getEventKey()) || $.isNotEmpty(messageData.getTicket())) {
+                        if (AllInOne.isNotEmpty(messageData.getEventKey()) ||
+                                AllInOne.isNotEmpty(messageData.getTicket())) {
                             oaMessage = new ScanSubscribeEvent(account, messageData.getCreateTime(),
                                     messageData.getEventKey(), messageData.getTicket());
                         } else {
