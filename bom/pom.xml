@@ -19,12 +19,12 @@
         <dependencies>
             <dependency>
                 <groupId>com.staringpig.framework</groupId>
-                <artifactId>wechat</artifactId>
+                <artifactId>wechat-starter</artifactId>
                 <version>${project.parent.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.staringpig.framework</groupId>
-                <artifactId>ai</artifactId>
+                <artifactId>ai-starter</artifactId>
                 <version>${project.parent.version}</version>
             </dependency>
         </dependencies>
