@@ -1,7 +1,7 @@
 package com.staringpig.framework.wechat.offiaccount.message.ordinary;
 
 import com.staringpig.framework.support.AllInOne;
-import com.staringpig.framework.wechat.offiaccount.account.OAAccount;
+import com.staringpig.framework.wechat.offiaccount.user.OAUser;
 import lombok.Getter;
 
 /**
@@ -28,16 +28,16 @@ public final class VoiceMessage extends OrdinaryMessage {
      */
     private final String recognition;
 
-    public VoiceMessage(String id, OAAccount oaAccount, Long createTime, String mediaId, Format format) {
-        super(id, oaAccount, createTime, Type.voice);
+    public VoiceMessage(String id, OAUser OAUser, Long createTime, String mediaId, Format format) {
+        super(id, OAUser, createTime, Type.voice);
         this.mediaId = mediaId;
         this.format = format;
         this.recognition = AllInOne.STRING_EMPTY;
     }
 
-    public VoiceMessage(String id, OAAccount oaAccount, Long createTime, String mediaId, Format format,
+    public VoiceMessage(String id, OAUser OAUser, Long createTime, String mediaId, Format format,
                         String recognition) {
-        super(id, oaAccount, createTime, Type.voice);
+        super(id, OAUser, createTime, Type.voice);
         this.mediaId = mediaId;
         this.format = format;
         this.recognition = recognition;

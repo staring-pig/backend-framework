@@ -1,14 +1,15 @@
 package com.staringpig.framework.starters.wechat.oplatform;
 
+import com.staringpig.framework.starters.wechat.WechatProperties;
+import com.staringpig.framework.wechat.oplatform.OpenPlatform;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration(proxyBeanMethods = false)
 public class OpenPlatformConfiguration {
 
-    @EnableJpaRepositories("com.staringpig.framework.starters.wechat.oplatform")
-    @Configuration(proxyBeanMethods = false)
-    public static class RepositoryConfiguration {
+    @Bean
+    public OpenPlatform openPlatform(WechatProperties properties) {
+        return new OpenPlatform(properties.getOpenPlatform().getAppId());
     }
-
 }

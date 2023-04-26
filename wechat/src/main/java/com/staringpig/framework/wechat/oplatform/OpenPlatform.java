@@ -4,16 +4,9 @@ import lombok.Getter;
 
 /**
  * 开放平台
+ *
+ * @param appId 开放平台也有自己的ID
  */
-public abstract class OpenPlatform {
+public record OpenPlatform(@Getter String appId) {
 
-    /**
-     * 开放平台也有自己的ID
-     */
-    @Getter
-    private final String appId;
-
-    public OpenPlatform(String appId) {
-        this.appId = appId;
-    }
 }

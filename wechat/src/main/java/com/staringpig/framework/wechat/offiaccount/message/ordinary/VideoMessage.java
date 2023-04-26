@@ -1,6 +1,6 @@
 package com.staringpig.framework.wechat.offiaccount.message.ordinary;
 
-import com.staringpig.framework.wechat.offiaccount.account.OAAccount;
+import com.staringpig.framework.wechat.offiaccount.user.OAUser;
 import lombok.Getter;
 
 /**
@@ -18,8 +18,8 @@ public final class VideoMessage extends OrdinaryMessage {
      */
     private final String thumbMediaId;
 
-    public VideoMessage(String id, OAAccount oaAccount, Long createTime, String mediaId, String thumbMediaId) {
-        super(id, oaAccount, createTime, Type.video);
+    public VideoMessage(String id, OAUser OAUser, Long createTime, String mediaId, String thumbMediaId) {
+        super(id, OAUser, createTime, Type.video);
         this.mediaId = mediaId;
         this.thumbMediaId = thumbMediaId;
     }

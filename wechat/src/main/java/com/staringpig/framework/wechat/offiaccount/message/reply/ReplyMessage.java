@@ -1,6 +1,6 @@
 package com.staringpig.framework.wechat.offiaccount.message.reply;
 
-import com.staringpig.framework.wechat.offiaccount.account.OAAccount;
+import com.staringpig.framework.wechat.offiaccount.user.OAUser;
 import com.staringpig.framework.wechat.offiaccount.message.OAMessage;
 
 /**
@@ -8,7 +8,7 @@ import com.staringpig.framework.wechat.offiaccount.message.OAMessage;
  */
 public abstract class ReplyMessage extends OAMessage {
 
-    protected ReplyMessage(OAAccount oaAccount, Long createTime, Type type) {
-        super(oaAccount, createTime, type);
+    protected ReplyMessage(OAUser OAUser, Long createTime, Type type) {
+        super(OAUser, createTime, type);
     }
 }

@@ -1,6 +1,6 @@
 package com.staringpig.framework.wechat.offiaccount.message.reply;
 
-import com.staringpig.framework.wechat.offiaccount.account.OAAccount;
+import com.staringpig.framework.wechat.offiaccount.user.OAUser;
 import lombok.Getter;
 
 /**
@@ -22,9 +22,9 @@ public final class VideoReplyMessage extends ReplyMessage {
      */
     private final String description;
 
-    public VideoReplyMessage(OAAccount oaAccount, Long createTime, String mediaId, String title,
+    public VideoReplyMessage(OAUser OAUser, Long createTime, String mediaId, String title,
                              String description) {
-        super(oaAccount, createTime, Type.video);
+        super(OAUser, createTime, Type.video);
         this.mediaId = mediaId;
         this.title = title;
         this.description = description;

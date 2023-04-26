@@ -1,5 +1,6 @@
-package com.staringpig.framework.wechat.offiaccount.account;
+package com.staringpig.framework.wechat.offiaccount.user;
 
+import com.staringpig.framework.wechat.oplatform.OPUser;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * 公众号账号
  */
 @Getter
-public abstract class OAAccount {
+public class OAUser {
 
     /**
      * 对应用户id
@@ -20,6 +21,14 @@ public abstract class OAAccount {
      * 公众号的appId
      */
     private final String oaAppId;
+
+    private final OPUser opUser;
+
+    /**
+     * 是否订阅
+     */
+    @Setter
+    private Boolean subscribed;
     /**
      * 昵称
      */
@@ -91,8 +100,9 @@ public abstract class OAAccount {
     @Setter
     private String qrSceneStr;
 
-    public OAAccount(String openId, String oaAppId) {
+    public OAUser(String openId, String oaAppId, OPUser opUser) {
         this.openId = openId;
         this.oaAppId = oaAppId;
+        this.opUser = opUser;
     }
 }

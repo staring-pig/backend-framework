@@ -1,7 +1,7 @@
 package com.staringpig.framework.wechat.offiaccount.message.reply;
 
 import com.staringpig.framework.support.AllInOne;
-import com.staringpig.framework.wechat.offiaccount.account.OAAccount;
+import com.staringpig.framework.wechat.offiaccount.user.OAUser;
 import lombok.Getter;
 
 /**
@@ -31,8 +31,8 @@ public final class MusicReplyMessage extends ReplyMessage {
      */
     private final String thumbMediaId;
 
-    public MusicReplyMessage(OAAccount oaAccount, Long createTime, String thumbMediaId) {
-        super(oaAccount, createTime, Type.music);
+    public MusicReplyMessage(OAUser OAUser, Long createTime, String thumbMediaId) {
+        super(OAUser, createTime, Type.music);
         this.thumbMediaId = thumbMediaId;
         this.musicURL = AllInOne.STRING_EMPTY;
         this.title = AllInOne.STRING_EMPTY;
@@ -40,9 +40,9 @@ public final class MusicReplyMessage extends ReplyMessage {
         this.hqMusicUrl = AllInOne.STRING_EMPTY;
     }
 
-    public MusicReplyMessage(OAAccount oaAccount, Long createTime, String thumbMediaId,
+    public MusicReplyMessage(OAUser OAUser, Long createTime, String thumbMediaId,
                              String musicURL, String title, String description, String hqMusicUrl) {
-        super(oaAccount, createTime, Type.music);
+        super(OAUser, createTime, Type.music);
         this.thumbMediaId = thumbMediaId;
         this.musicURL = musicURL;
         this.title = title;

@@ -1,6 +1,6 @@
 package com.staringpig.framework.wechat.offiaccount.message;
 
-import com.staringpig.framework.wechat.offiaccount.account.OAAccount;
+import com.staringpig.framework.wechat.offiaccount.user.OAUser;
 import lombok.Getter;
 
 /**
@@ -12,7 +12,7 @@ public abstract class OAMessage {
     /**
      * 接收方微信号
      */
-    private final OAAccount oaAccount;
+    private final OAUser OAUser;
     /**
      * 消息创建时间
      */
@@ -22,8 +22,8 @@ public abstract class OAMessage {
      */
     private final Type type;
 
-    protected OAMessage(OAAccount oaAccount, Long createTime, Type type) {
-        this.oaAccount = oaAccount;
+    protected OAMessage(OAUser OAUser, Long createTime, Type type) {
+        this.OAUser = OAUser;
         this.createTime = createTime;
         this.type = type;
     }

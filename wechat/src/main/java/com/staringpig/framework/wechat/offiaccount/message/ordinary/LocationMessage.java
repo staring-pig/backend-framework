@@ -1,6 +1,6 @@
 package com.staringpig.framework.wechat.offiaccount.message.ordinary;
 
-import com.staringpig.framework.wechat.offiaccount.account.OAAccount;
+import com.staringpig.framework.wechat.offiaccount.user.OAUser;
 import com.staringpig.framework.wechat.offiaccount.message.OAMessage;
 import lombok.Getter;
 
@@ -29,9 +29,9 @@ public final class LocationMessage extends OrdinaryMessage {
      */
     private final String label;
 
-    public LocationMessage(String id, OAAccount oaAccount, Long createTime, BigDecimal locationX,
+    public LocationMessage(String id, OAUser OAUser, Long createTime, BigDecimal locationX,
                            BigDecimal locationY, BigDecimal scale, String label) {
-        super(id, oaAccount, createTime, OAMessage.Type.location);
+        super(id, OAUser, createTime, OAMessage.Type.location);
         this.locationX = locationX;
         this.locationY = locationY;
         this.scale = scale;

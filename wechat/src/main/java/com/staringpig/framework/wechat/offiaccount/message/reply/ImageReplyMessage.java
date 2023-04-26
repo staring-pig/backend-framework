@@ -1,6 +1,6 @@
 package com.staringpig.framework.wechat.offiaccount.message.reply;
 
-import com.staringpig.framework.wechat.offiaccount.account.OAAccount;
+import com.staringpig.framework.wechat.offiaccount.user.OAUser;
 import com.staringpig.framework.wechat.offiaccount.message.OAMessage;
 import lombok.Getter;
 
@@ -15,8 +15,8 @@ public final class ImageReplyMessage extends ReplyMessage {
      */
     private final String mediaId;
 
-    public ImageReplyMessage(OAAccount oaAccount, Long createTime, String mediaId) {
-        super(oaAccount, createTime, OAMessage.Type.image);
+    public ImageReplyMessage(OAUser OAUser, Long createTime, String mediaId) {
+        super(OAUser, createTime, OAMessage.Type.image);
         this.mediaId = mediaId;
     }
 }

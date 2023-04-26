@@ -1,6 +1,6 @@
 package com.staringpig.framework.wechat.offiaccount.message.event;
 
-import com.staringpig.framework.wechat.offiaccount.account.OAAccount;
+import com.staringpig.framework.wechat.offiaccount.user.OAUser;
 import com.staringpig.framework.wechat.offiaccount.message.OAMessage;
 import lombok.Getter;
 
@@ -15,8 +15,8 @@ public abstract class OAEventMessage extends OAMessage {
     @Getter
     private final Type event;
 
-    protected OAEventMessage(OAAccount oaAccount, Long createTime, Type event) {
-        super(oaAccount, createTime, OAMessage.Type.event);
+    protected OAEventMessage(OAUser OAUser, Long createTime, Type event) {
+        super(OAUser, createTime, OAMessage.Type.event);
         this.event = event;
     }
 

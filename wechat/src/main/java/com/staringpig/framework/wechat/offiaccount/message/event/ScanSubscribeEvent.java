@@ -1,6 +1,6 @@
 package com.staringpig.framework.wechat.offiaccount.message.event;
 
-import com.staringpig.framework.wechat.offiaccount.account.OAAccount;
+import com.staringpig.framework.wechat.offiaccount.user.OAUser;
 import lombok.Getter;
 
 /**
@@ -18,8 +18,8 @@ public final class ScanSubscribeEvent extends SubscribeEvent {
      */
     private final String ticket;
 
-    public ScanSubscribeEvent(OAAccount oaAccount, Long createTime, String eventKey, String ticket) {
-        super(oaAccount, createTime);
+    public ScanSubscribeEvent(OAUser OAUser, Long createTime, String eventKey, String ticket) {
+        super(OAUser, createTime);
         this.eventKey = eventKey;
         this.ticket = ticket;
     }

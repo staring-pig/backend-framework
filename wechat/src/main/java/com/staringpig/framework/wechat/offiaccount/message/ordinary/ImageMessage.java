@@ -1,6 +1,6 @@
 package com.staringpig.framework.wechat.offiaccount.message.ordinary;
 
-import com.staringpig.framework.wechat.offiaccount.account.OAAccount;
+import com.staringpig.framework.wechat.offiaccount.user.OAUser;
 import com.staringpig.framework.wechat.offiaccount.message.OAMessage;
 import lombok.Getter;
 
@@ -19,8 +19,8 @@ public final class ImageMessage extends OrdinaryMessage {
      */
     private final String mediaId;
 
-    public ImageMessage(String id, OAAccount oaAccount, Long createTime, String picUrl, String mediaId) {
-        super(id, oaAccount, createTime, OAMessage.Type.image);
+    public ImageMessage(String id, OAUser OAUser, Long createTime, String picUrl, String mediaId) {
+        super(id, OAUser, createTime, OAMessage.Type.image);
         this.picUrl = picUrl;
         this.mediaId = mediaId;
     }

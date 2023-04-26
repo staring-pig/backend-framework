@@ -2,8 +2,6 @@ package com.staringpig.framework.wechat.offiaccount.message.listener;
 
 import com.staringpig.framework.support.AllInOne;
 import com.staringpig.framework.wechat.offiaccount.OffiAccount;
-import com.staringpig.framework.wechat.offiaccount.account.OAAccount;
-import com.staringpig.framework.wechat.offiaccount.account.OAAccountRepository;
 import com.staringpig.framework.wechat.offiaccount.message.OAMessage;
 import com.staringpig.framework.wechat.offiaccount.message.event.KeyClickEvent;
 import com.staringpig.framework.wechat.offiaccount.message.event.OAEventMessage;
@@ -17,7 +15,6 @@ import com.staringpig.framework.wechat.offiaccount.message.listener.api.Publishe
 import com.staringpig.framework.wechat.offiaccount.message.listener.api.ReceivedMessageData;
 import com.staringpig.framework.wechat.offiaccount.message.ordinary.ImageMessage;
 import com.staringpig.framework.wechat.offiaccount.message.ordinary.LinkMessage;
-import com.staringpig.framework.wechat.offiaccount.message.ordinary.LocationMessage;
 import com.staringpig.framework.wechat.offiaccount.message.ordinary.ShortVideoMessage;
 import com.staringpig.framework.wechat.offiaccount.message.ordinary.TextMessage;
 import com.staringpig.framework.wechat.offiaccount.message.ordinary.VideoMessage;
@@ -29,6 +26,8 @@ import com.staringpig.framework.wechat.offiaccount.message.reply.ReplyMessage;
 import com.staringpig.framework.wechat.offiaccount.message.reply.TextReplyMessage;
 import com.staringpig.framework.wechat.offiaccount.message.reply.VideoReplyMessage;
 import com.staringpig.framework.wechat.offiaccount.message.reply.VoiceReplyMessage;
+import com.staringpig.framework.wechat.offiaccount.user.OAUserRepository;
+import com.staringpig.framework.wechat.offiaccount.user.OAUser;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -38,14 +37,14 @@ import java.util.Optional;
 public class NormalOAMessageConvertor implements OAMessageConvertor {
 
     private final OffiAccount offiAccount;
-    private final OAAccountRepository<? extends OAAccount> oaAccountRepository;
+    private final OAUserRepository oaUserRepository;
     private final KeyClickEvent.KeyConverter<? extends KeyClickEvent.Key> keyConverter;
 
     public NormalOAMessageConvertor(OffiAccount offiAccount,
-                                    OAAccountRepository<? extends OAAccount> oaAccountRepository,
+                                    OAUserRepository oaUserRepository,
                                     KeyClickEvent.KeyConverter<? extends KeyClickEvent.Key> keyConverter) {
         this.offiAccount = offiAccount;
-        this.oaAccountRepository = oaAccountRepository;
+        this.oaUserRepository = oaUserRepository;
         this.keyConverter = keyConverter;
     }
 
@@ -62,17 +61,17 @@ public class NormalOAMessageConvertor implements OAMessageConvertor {
 
         OAMessage oaMessage = null;
 
-        OAAccount account;
-        Optional<? extends OAAccount> opAppAccount = oaAccountRepository.queryByOpenId(messageData.getFromUserName());
+        OAUser account;
+        Optional<OAUser> opAppAccount = oaUserRepository.queryByOpenId(messageData.getFromUserName());
         if (opAppAccount.isEmpty()) {
             OffiAccount.UserInfo userInfo = offiAccount.userInfo(messageData.getFromUserName());
-            account = oaAccountRepository.saveByUserInfo(offiAccount.getAppId(), userInfo);
+            account = oaUserRepository.saveIt(userInfo.convert(offiAccount.getAppId()));
         } else {
             account = opAppAccount.get();
         }
 
         switch (type) {
-            case event:
+            case event -> {
                 OAEventMessage.Type eventType;
                 try {
                     eventType = OAEventMessage.Type.valueOf(messageData.getEvent());
@@ -80,7 +79,7 @@ public class NormalOAMessageConvertor implements OAMessageConvertor {
                     return null;
                 }
                 switch (eventType) {
-                    case subscribe:
+                    case subscribe -> {
                         if (AllInOne.isNotEmpty(messageData.getEventKey()) ||
                                 AllInOne.isNotEmpty(messageData.getTicket())) {
                             oaMessage = new ScanSubscribeEvent(account, messageData.getCreateTime(),
@@ -88,69 +87,45 @@ public class NormalOAMessageConvertor implements OAMessageConvertor {
                         } else {
                             oaMessage = new SubscribeEvent(account, messageData.getCreateTime());
                         }
-                        break;
-                    case unsubscribe:
-                        oaMessage = new UnsubscribeEvent(account, messageData.getCreateTime());
-                        break;
-                    case SCAN:
-                        oaMessage = new ScanEvent(account, messageData.getCreateTime(), messageData.getEventKey(),
-                                messageData.getTicket());
-                        break;
-                    case CLICK:
-                        oaMessage = new KeyClickEvent(account, messageData.getCreateTime(),
-                                keyConverter.convert(messageData.getEventKey()));
-                        break;
-                    case LOCATION:
-                        oaMessage = new UpLocationEvent(account, messageData.getCreateTime(),
-                                BigDecimal.valueOf(messageData.getLatitude()),
-                                BigDecimal.valueOf(messageData.getLongitude()),
-                                BigDecimal.valueOf(messageData.getPrecision()));
-                        break;
-                    case VIEW:
-                        oaMessage = new ViewEvent(account, messageData.getCreateTime(), messageData.getEventKey());
-                        break;
-                    default:
-                        break;
+                    }
+                    case unsubscribe -> oaMessage = new UnsubscribeEvent(account, messageData.getCreateTime());
+                    case SCAN ->
+                            oaMessage = new ScanEvent(account, messageData.getCreateTime(), messageData.getEventKey(),
+                                    messageData.getTicket());
+                    case CLICK -> oaMessage = new KeyClickEvent(account, messageData.getCreateTime(),
+                            keyConverter.convert(messageData.getEventKey()));
+                    case LOCATION -> oaMessage = new UpLocationEvent(account, messageData.getCreateTime(),
+                            BigDecimal.valueOf(messageData.getLatitude()),
+                            BigDecimal.valueOf(messageData.getLongitude()),
+                            BigDecimal.valueOf(messageData.getPrecision()));
+                    case VIEW ->
+                            oaMessage = new ViewEvent(account, messageData.getCreateTime(), messageData.getEventKey());
+                    default -> {
+                    }
                 }
-                break;
-            case text:
-                oaMessage = new TextMessage(String.valueOf(messageData.getMsgId()), account,
-                        messageData.getCreateTime(), messageData.getContent());
-                break;
-            case image:
-                oaMessage = new ImageMessage(String.valueOf(messageData.getMsgId()), account,
-                        messageData.getCreateTime(), messageData.getPicUrl(), messageData.getMediaId());
-                break;
-            case voice:
-                oaMessage = new VoiceMessage(String.valueOf(messageData.getMsgId()), account,
-                        messageData.getCreateTime(), messageData.getMediaId(),
-                        VoiceMessage.Format.valueOf(messageData.getFormat()), messageData.getRecognition());
-                break;
-            case video:
-                oaMessage = new VideoMessage(String.valueOf(messageData.getMsgId()), account,
-                        messageData.getCreateTime(), messageData.getMediaId(), messageData.getThumbMediaId());
-                break;
-            case shortvideo:
-                oaMessage = new ShortVideoMessage(String.valueOf(messageData.getMsgId()), account,
-                        messageData.getCreateTime(), messageData.getMediaId(), messageData.getThumbMediaId());
-                break;
-            case location:
-                oaMessage = new LocationMessage(String.valueOf(messageData.getMsgId()), account,
-                        messageData.getCreateTime(), BigDecimal.valueOf(messageData.getLocationX()),
-                        BigDecimal.valueOf(messageData.getLocationY()), BigDecimal.valueOf(messageData.getScale()),
-                        messageData.getLabel());
-                break;
-            case link:
-                oaMessage = new LinkMessage(String.valueOf(messageData.getMsgId()), account,
-                        messageData.getCreateTime(), messageData.getTitle(), messageData.getDescription(),
-                        messageData.getUrl());
-                break;
+            }
+            case text -> oaMessage = new TextMessage(String.valueOf(messageData.getMsgId()), account,
+                    messageData.getCreateTime(), messageData.getContent());
+            case image -> oaMessage = new ImageMessage(String.valueOf(messageData.getMsgId()), account,
+                    messageData.getCreateTime(), messageData.getPicUrl(), messageData.getMediaId());
+            case voice -> oaMessage = new VoiceMessage(String.valueOf(messageData.getMsgId()), account,
+                    messageData.getCreateTime(), messageData.getMediaId(),
+                    VoiceMessage.Format.valueOf(messageData.getFormat()), messageData.getRecognition());
+            case video -> oaMessage = new VideoMessage(String.valueOf(messageData.getMsgId()), account,
+                    messageData.getCreateTime(), messageData.getMediaId(), messageData.getThumbMediaId());
+            case shortvideo -> oaMessage = new ShortVideoMessage(String.valueOf(messageData.getMsgId()), account,
+                    messageData.getCreateTime(), messageData.getMediaId(), messageData.getThumbMediaId());
+            case location -> oaMessage = new LocationMessage(String.valueOf(messageData.getMsgId()), account,
+                    messageData.getCreateTime(), BigDecimal.valueOf(messageData.getLocationX()),
+                    BigDecimal.valueOf(messageData.getLocationY()), BigDecimal.valueOf(messageData.getScale()),
+                    messageData.getLabel());
+            case link -> oaMessage = new LinkMessage(String.valueOf(messageData.getMsgId()), account,
+                    messageData.getCreateTime(), messageData.getTitle(), messageData.getDescription(),
+                    messageData.getUrl());
 
             // 下面的消息不会被收到
-            case music:
-            case news:
-            default:
-                break;
+            default -> {
+            }
         }
 
         return oaMessage;
@@ -164,24 +139,24 @@ public class NormalOAMessageConvertor implements OAMessageConvertor {
         }
 
         PublishedMessageData.PublishedMessageDataBuilder messageDataBuilder = PublishedMessageData.builder();
-        messageDataBuilder.fromUserName(replyMessage.getOaAccount().getOaAppId());
-        messageDataBuilder.toUserName(replyMessage.getOaAccount().getOpenId());
+        messageDataBuilder.fromUserName(replyMessage.getOAUser().getOaAppId());
+        messageDataBuilder.toUserName(replyMessage.getOAUser().getOpenId());
         messageDataBuilder.createTime(replyMessage.getCreateTime());
 
-        if (replyMessage instanceof ImageReplyMessage) {
+        if (replyMessage instanceof ImageReplyMessage imageMessage) {
             messageDataBuilder.image(PublishedMessageData.Image.builder()
-                    .mediaId(((ImageReplyMessage) replyMessage).getMediaId())
+                    .mediaId(imageMessage.getMediaId())
                     .build());
-        } else if (replyMessage instanceof MusicReplyMessage) {
+        } else if (replyMessage instanceof MusicReplyMessage musicMessage) {
             messageDataBuilder.music(PublishedMessageData.Music.builder()
-                    .description(((MusicReplyMessage) replyMessage).getDescription())
-                    .hqMusicUrl(((MusicReplyMessage) replyMessage).getHqMusicUrl())
-                    .musicUrl(((MusicReplyMessage) replyMessage).getMusicURL())
-                    .title(((MusicReplyMessage) replyMessage).getTitle())
+                    .description(musicMessage.getDescription())
+                    .hqMusicUrl(musicMessage.getHqMusicUrl())
+                    .musicUrl(musicMessage.getMusicURL())
+                    .title(musicMessage.getTitle())
                     .build());
-        } else if (replyMessage instanceof NewsReplyMessage) {
+        } else if (replyMessage instanceof NewsReplyMessage newsMessage) {
             List<PublishedMessageData.Article> articles = new ArrayList<>();
-            for (NewsReplyMessage.Item article : ((NewsReplyMessage) replyMessage).getArticles()) {
+            for (NewsReplyMessage.Item article : newsMessage.getArticles()) {
                 articles.add(PublishedMessageData.Article.builder()
                         .description(article.getDescription())
                         .picUrl(article.getPicUrl())
@@ -191,16 +166,15 @@ public class NormalOAMessageConvertor implements OAMessageConvertor {
             }
             messageDataBuilder.articles(articles);
             messageDataBuilder.articleCount(articles.size());
-        } else if (replyMessage instanceof TextReplyMessage) {
-            messageDataBuilder.content(((TextReplyMessage) replyMessage).getContent());
-        } else if (replyMessage instanceof VideoReplyMessage) {
-            VideoReplyMessage videoMessage = (VideoReplyMessage) replyMessage;
+        } else if (replyMessage instanceof TextReplyMessage textMessage) {
+            messageDataBuilder.content(textMessage.getContent());
+        } else if (replyMessage instanceof VideoReplyMessage videoMessage) {
             messageDataBuilder.video(PublishedMessageData.Video.builder()
                     .description(videoMessage.getDescription())
                     .mediaId(videoMessage.getMediaId())
                     .title(videoMessage.getTitle()).build());
-        } else if (replyMessage instanceof VoiceReplyMessage) {
-            messageDataBuilder.voice(new PublishedMessageData.Voice(((VoiceReplyMessage) replyMessage).getMediaId()));
+        } else if (replyMessage instanceof VoiceReplyMessage voiceMessage) {
+            messageDataBuilder.voice(new PublishedMessageData.Voice(voiceMessage.getMediaId()));
         }
 
         messageDataBuilder.msgType(replyMessage.getType().name());

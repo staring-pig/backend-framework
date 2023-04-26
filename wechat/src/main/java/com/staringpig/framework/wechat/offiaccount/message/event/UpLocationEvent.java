@@ -1,6 +1,6 @@
 package com.staringpig.framework.wechat.offiaccount.message.event;
 
-import com.staringpig.framework.wechat.offiaccount.account.OAAccount;
+import com.staringpig.framework.wechat.offiaccount.user.OAUser;
 import lombok.Getter;
 
 import java.math.BigDecimal;
@@ -24,9 +24,9 @@ public final class UpLocationEvent extends OAEventMessage {
      */
     private final BigDecimal precision;
 
-    public UpLocationEvent(OAAccount oaAccount, Long createTime, BigDecimal latitude, BigDecimal longitude,
+    public UpLocationEvent(OAUser OAUser, Long createTime, BigDecimal latitude, BigDecimal longitude,
                            BigDecimal precision) {
-        super(oaAccount, createTime, Type.LOCATION);
+        super(OAUser, createTime, Type.LOCATION);
         this.latitude = latitude;
         this.longitude = longitude;
         this.precision = precision;

@@ -21,13 +21,12 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>11</java.version>
+        <java.version>20</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <lombok.version>1.18.22</lombok.version>
         <jackson.version>2.14.2</jackson.version>
         <retrofit.version>2.9.0</retrofit.version>
-        <spring-boot.version>3.0.6</spring-boot.version>
         <guava.version>31.1-jre</guava.version>
     </properties>
 

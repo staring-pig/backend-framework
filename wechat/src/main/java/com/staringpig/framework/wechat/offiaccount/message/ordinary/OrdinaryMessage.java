@@ -1,6 +1,6 @@
 package com.staringpig.framework.wechat.offiaccount.message.ordinary;
 
-import com.staringpig.framework.wechat.offiaccount.account.OAAccount;
+import com.staringpig.framework.wechat.offiaccount.user.OAUser;
 import com.staringpig.framework.wechat.offiaccount.message.OAMessage;
 import lombok.Getter;
 
@@ -15,8 +15,8 @@ public abstract class OrdinaryMessage extends OAMessage {
     @Getter
     private final String id;
 
-    protected OrdinaryMessage(String id, OAAccount oaAccount, Long createTime, Type type) {
-        super(oaAccount, createTime, type);
+    protected OrdinaryMessage(String id, OAUser OAUser, Long createTime, Type type) {
+        super(OAUser, createTime, type);
         this.id = id;
     }
 }

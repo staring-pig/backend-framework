@@ -1,6 +1,6 @@
 package com.staringpig.framework.wechat.offiaccount.message.reply;
 
-import com.staringpig.framework.wechat.offiaccount.account.OAAccount;
+import com.staringpig.framework.wechat.offiaccount.user.OAUser;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,8 +22,8 @@ public final class NewsReplyMessage extends ReplyMessage {
      */
     private final List<Item> articles;
 
-    public NewsReplyMessage(OAAccount oaAccount, Long createTime, List<Item> articles) {
-        super(oaAccount, createTime, Type.news);
+    public NewsReplyMessage(OAUser OAUser, Long createTime, List<Item> articles) {
+        super(OAUser, createTime, Type.news);
         this.articles = articles;
         this.articleCount = articles.size();
     }

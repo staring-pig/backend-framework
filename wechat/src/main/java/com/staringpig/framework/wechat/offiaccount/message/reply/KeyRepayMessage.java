@@ -1,6 +1,6 @@
 package com.staringpig.framework.wechat.offiaccount.message.reply;
 
-import com.staringpig.framework.wechat.offiaccount.account.OAAccount;
+import com.staringpig.framework.wechat.offiaccount.user.OAUser;
 import com.staringpig.framework.wechat.offiaccount.message.event.KeyClickEvent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -81,29 +81,29 @@ public class KeyRepayMessage {
      *
      * @return 回复消息
      */
-    public ReplyMessage generate(OAAccount oaAccount) {
+    public ReplyMessage generate(OAUser OAUser) {
 
         ReplyMessage replyMessage = null;
 
         switch (this.type) {
             case NEWS:
-                replyMessage = new NewsReplyMessage(oaAccount, Instant.now().getEpochSecond(), this.articles);
+                replyMessage = new NewsReplyMessage(OAUser, Instant.now().getEpochSecond(), this.articles);
                 break;
             case TEXT:
-                replyMessage = new TextReplyMessage(oaAccount, Instant.now().getEpochSecond(), this.content);
+                replyMessage = new TextReplyMessage(OAUser, Instant.now().getEpochSecond(), this.content);
                 break;
             case IMAGE:
-                replyMessage = new ImageReplyMessage(oaAccount, Instant.now().getEpochSecond(), this.mediaId);
+                replyMessage = new ImageReplyMessage(OAUser, Instant.now().getEpochSecond(), this.mediaId);
                 break;
             case MUSIC:
-                replyMessage = new MusicReplyMessage(oaAccount, Instant.now().getEpochSecond(), this.thumbMediaId);
+                replyMessage = new MusicReplyMessage(OAUser, Instant.now().getEpochSecond(), this.thumbMediaId);
                 break;
             case VIDEO:
-                replyMessage = new VideoReplyMessage(oaAccount, Instant.now().getEpochSecond(), this.mediaId,
+                replyMessage = new VideoReplyMessage(OAUser, Instant.now().getEpochSecond(), this.mediaId,
                         this.title, this.description);
                 break;
             case VOICE:
-                replyMessage = new VoiceReplyMessage(oaAccount, Instant.now().getEpochSecond(), this.mediaId);
+                replyMessage = new VoiceReplyMessage(OAUser, Instant.now().getEpochSecond(), this.mediaId);
                 break;
         }
 

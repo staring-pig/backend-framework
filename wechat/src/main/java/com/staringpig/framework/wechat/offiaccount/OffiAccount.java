@@ -1,5 +1,7 @@
 package com.staringpig.framework.wechat.offiaccount;
 
+import com.staringpig.framework.wechat.offiaccount.user.OAUser;
+import com.staringpig.framework.wechat.oplatform.OPUser;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,7 +39,6 @@ public class OffiAccount {
         this.token = token;
         this.endpoint = endpoint;
     }
-
 
     public UserInfo userInfo(String openId) {
         return endpoint.userInfo(this.appId, this.appSecret, openId);
@@ -81,5 +82,25 @@ public class OffiAccount {
         private Integer qrScene;
 
         private String qrSceneStr;
+
+        public OAUser convert(String appId) {
+            OAUser account = new OAUser(this.getOpenid(), appId, new OPUser(this.unionId));
+            account.setCity(this.getCity());
+            account.setCountry(this.getCountry());
+            account.setLanguage(this.getLanguage());
+            account.setNickname(this.getNickname());
+            account.setProvince(this.getProvince());
+            account.setGroupId(this.getGroupId());
+            account.setHeadImgUrl(this.getHeadImgUrl());
+            account.setQrScene(this.getQrScene());
+            account.setQrSceneStr(this.getQrSceneStr());
+            account.setRemark(this.getRemark());
+            account.setSex(this.getSex());
+            account.setSubscribed(true);
+            account.setSubscribeScene(this.getSubscribeScene());
+            account.setSubscribeTime(this.getSubscribeTime());
+            account.setTagIds(this.getTagIds());
+            return account;
+        }
     }
 }

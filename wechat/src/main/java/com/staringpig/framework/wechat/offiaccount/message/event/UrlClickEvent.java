@@ -1,6 +1,6 @@
 package com.staringpig.framework.wechat.offiaccount.message.event;
 
-import com.staringpig.framework.wechat.offiaccount.account.OAAccount;
+import com.staringpig.framework.wechat.offiaccount.user.OAUser;
 import lombok.Getter;
 
 /**
@@ -11,8 +11,8 @@ public class UrlClickEvent extends OAEventMessage {
     @Getter
     private final String url;
 
-    public UrlClickEvent(OAAccount oaAccount, Long createTime, String url) {
-        super(oaAccount, createTime, Type.VIEW);
+    public UrlClickEvent(OAUser OAUser, Long createTime, String url) {
+        super(OAUser, createTime, Type.VIEW);
         this.url = url;
     }
 }

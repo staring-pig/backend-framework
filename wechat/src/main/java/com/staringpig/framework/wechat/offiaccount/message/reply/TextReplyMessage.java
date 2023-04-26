@@ -1,6 +1,6 @@
 package com.staringpig.framework.wechat.offiaccount.message.reply;
 
-import com.staringpig.framework.wechat.offiaccount.account.OAAccount;
+import com.staringpig.framework.wechat.offiaccount.user.OAUser;
 import lombok.Getter;
 
 /**
@@ -14,8 +14,8 @@ public final class TextReplyMessage extends ReplyMessage {
      */
     private final String content;
 
-    public TextReplyMessage(OAAccount oaAccount, Long createTime, String content) {
-        super(oaAccount, createTime, Type.text);
+    public TextReplyMessage(OAUser OAUser, Long createTime, String content) {
+        super(OAUser, createTime, Type.text);
         this.content = content;
     }
 }
