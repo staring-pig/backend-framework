@@ -4,38 +4,35 @@ import com.staringpig.framework.wechat.offiaccount.user.OAUser;
 import com.staringpig.framework.wechat.offiaccount.user.OAUserRepository;
 import com.staringpig.framework.wechat.oplatform.OPUser;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface JPAOAUserRepository extends OAUserRepository,
-        CrudRepository<JPAOAUserRepository.JPAOAUser, String> {
+        CrudRepository<JPAOAUserRepository.JPAOAUserEntity, String> {
 
-    Optional<JPAOAUser> findByOpenId(String openId);
+    Optional<JPAOAUserEntity> findByOpenId(String openId);
 
     @Override
     default Optional<OAUser> queryByOpenId(String openId) {
-        return findByOpenId(openId).map(JPAOAUser::convert);
+        return findByOpenId(openId).map(JPAOAUserEntity::convert);
     }
 
     @Override
     default OAUser saveIt(OAUser user) {
-        return save(JPAOAUser.valueOf(user)).convert();
+        return save(JPAOAUserEntity.valueOf(user)).convert();
     }
 
 
     @Entity
     @Setter
     @Getter
-    @Builder
     @Table(name = "t_oa_user")
-    class JPAOAUser {
+    class JPAOAUserEntity {
         /**
          * 对应用户id
          */
@@ -97,7 +94,7 @@ public interface JPAOAUserRepository extends OAUserRepository,
         /**
          * 标签
          */
-        private List<Integer> tagIds;
+//        private List<Integer> tagIds;
         /**
          * 订阅场景
          */
@@ -127,31 +124,32 @@ public interface JPAOAUserRepository extends OAUserRepository,
             account.setSubscribed(this.getSubscribed());
             account.setSubscribeScene(this.getSubscribeScene());
             account.setSubscribeTime(this.getSubscribeTime());
-            account.setTagIds(this.getTagIds());
+//            account.setTagIds(this.getTagIds());
             return account;
         }
 
-        public static JPAOAUser valueOf(OAUser user) {
-            return JPAOAUser.builder()
-                    .unionId(user.getOpUser().unionId())
-                    .city(user.getCity())
-                    .sex(user.getSex())
-                    .qrScene(user.getQrScene())
-                    .country(user.getCountry())
-                    .groupId(user.getGroupId())
-                    .headImgUrl(user.getHeadImgUrl())
-                    .language(user.getLanguage())
-                    .nickname(user.getNickname())
-                    .oaAppId(user.getOaAppId())
-                    .openId(user.getOpenId())
-                    .province(user.getProvince())
-                    .qrSceneStr(user.getQrSceneStr())
-                    .remark(user.getRemark())
-                    .subscribed(user.getSubscribed())
-                    .subscribeScene(user.getSubscribeScene())
-                    .subscribeTime(user.getSubscribeTime())
-                    .tagIds(user.getTagIds())
-                    .build();
+        public static JPAOAUserEntity valueOf(OAUser user) {
+//            return JPAOAUser.builder()
+//                    .unionId(user.getOpUser().unionId())
+//                    .city(user.getCity())
+//                    .sex(user.getSex())
+//                    .qrScene(user.getQrScene())
+//                    .country(user.getCountry())
+//                    .groupId(user.getGroupId())
+//                    .headImgUrl(user.getHeadImgUrl())
+//                    .language(user.getLanguage())
+//                    .nickname(user.getNickname())
+//                    .oaAppId(user.getOaAppId())
+//                    .openId(user.getOpenId())
+//                    .province(user.getProvince())
+//                    .qrSceneStr(user.getQrSceneStr())
+//                    .remark(user.getRemark())
+//                    .subscribed(user.getSubscribed())
+//                    .subscribeScene(user.getSubscribeScene())
+//                    .subscribeTime(user.getSubscribeTime())
+////                    .tagIds(user.getTagIds())
+//                    .build();
+            return null;
         }
     }
 }

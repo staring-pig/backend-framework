@@ -14,7 +14,8 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 public class AccessTokenConfiguration {
 
     @Bean
-    public AccessTokenEndpoint endpoint(WechatProperties properties, JacksonConverterFactory jacksonConverterFactory) {
+    public AccessTokenEndpoint accessTokenEndpoint(WechatProperties properties,
+                                                   JacksonConverterFactory jacksonConverterFactory) {
         return new AccessTokenEndpoint(new Retrofit.Builder()
                 .baseUrl(AllInOne.isEmpty(properties.getAccessTokenBaseUrl()) ? OffiAccountAPI.URL
                         : properties.getAccessTokenBaseUrl())

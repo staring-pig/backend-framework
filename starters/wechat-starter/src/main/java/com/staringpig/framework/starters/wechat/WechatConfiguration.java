@@ -2,6 +2,7 @@ package com.staringpig.framework.starters.wechat;
 
 import com.staringpig.framework.starters.wechat.accesstoken.AccessTokenConfiguration;
 import com.staringpig.framework.starters.wechat.offiaccount.OffiAccountConfiguration;
+import com.staringpig.framework.starters.wechat.oplatform.OpenPlatformConfiguration;
 import com.staringpig.framework.support.AllInOne;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -12,7 +13,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 @EnableConfigurationProperties(WechatProperties.class)
 @Configuration(proxyBeanMethods = false)
-@Import({AccessTokenConfiguration.class, OffiAccountConfiguration.class})
+@Import({AccessTokenConfiguration.class, OffiAccountConfiguration.class, OpenPlatformConfiguration.class})
 public class WechatConfiguration {
 
     @Bean

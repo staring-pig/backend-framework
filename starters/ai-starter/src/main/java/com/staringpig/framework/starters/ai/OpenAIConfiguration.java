@@ -51,13 +51,13 @@ public class OpenAIConfiguration {
 
     @Bean
     @ConditionalOnBean(CacheManager.class)
-    public ChatContextStore chatContextStore(CacheManager cacheManager) {
+    public ChatContextStore cachedChatContextStore(CacheManager cacheManager) {
         return new CachedChatContextStore(cacheManager);
     }
 
     @Bean
     @ConditionalOnMissingBean
-    public ChatContextStore chatContextStore() {
+    public ChatContextStore memoryChatContextStore() {
         return new ChatContextStore() {
 
             final Map<String, ChatCompleting.ChatContext> memory = new ConcurrentHashMap<>();
