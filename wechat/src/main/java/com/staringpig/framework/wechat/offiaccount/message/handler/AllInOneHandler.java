@@ -12,22 +12,22 @@ public interface AllInOneHandler {
     /**
      * 扫码订阅监听
      */
-    Optional<ReplyMessage> onScanSubscribed(OAUser OAUser, String eventKey, String ticket);
+    Optional<ReplyMessage> onScanSubscribed(OAUser oaUser, String eventKey, String ticket);
 
     /**
      * 扫码订阅监听
      */
-    Optional<ReplyMessage> onScan(OAUser OAUser, String eventKey, String ticket);
+    Optional<ReplyMessage> onScan(OAUser oaUser, String eventKey, String ticket);
 
     /**
      * 订阅监听
      */
-    Optional<ReplyMessage> onSubscribed(OAUser OAUser);
+    Optional<ReplyMessage> onSubscribed(OAUser oaUser);
 
     /**
      * 取消订阅
      */
-    Optional<ReplyMessage> onUnSubscribed(OAUser OAUser);
+    Optional<ReplyMessage> onUnSubscribed(OAUser oaUser);
 
     /**
      * 上传地址事件

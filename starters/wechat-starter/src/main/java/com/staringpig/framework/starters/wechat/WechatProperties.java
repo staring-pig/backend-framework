@@ -46,6 +46,25 @@ public class WechatProperties {
          * 通知地址
          */
         private String notifyPath;
+        /**
+         * 默认回复
+         */
+        private DefaultReplay defaultReplay;
+
+        @Setter
+        @Getter
+        @NoArgsConstructor
+        @AllArgsConstructor
+        public static class DefaultReplay {
+            /**
+             * 默认内容
+             */
+            private String content;
+            /**
+             * 环境内容
+             */
+            private String welcomeContent;
+        }
     }
 
     @Setter

@@ -15,6 +15,7 @@ import com.staringpig.framework.wechat.offiaccount.message.listener.api.Publishe
 import com.staringpig.framework.wechat.offiaccount.message.listener.api.ReceivedMessageData;
 import com.staringpig.framework.wechat.offiaccount.message.ordinary.ImageMessage;
 import com.staringpig.framework.wechat.offiaccount.message.ordinary.LinkMessage;
+import com.staringpig.framework.wechat.offiaccount.message.ordinary.LocationMessage;
 import com.staringpig.framework.wechat.offiaccount.message.ordinary.ShortVideoMessage;
 import com.staringpig.framework.wechat.offiaccount.message.ordinary.TextMessage;
 import com.staringpig.framework.wechat.offiaccount.message.ordinary.VideoMessage;
@@ -26,8 +27,8 @@ import com.staringpig.framework.wechat.offiaccount.message.reply.ReplyMessage;
 import com.staringpig.framework.wechat.offiaccount.message.reply.TextReplyMessage;
 import com.staringpig.framework.wechat.offiaccount.message.reply.VideoReplyMessage;
 import com.staringpig.framework.wechat.offiaccount.message.reply.VoiceReplyMessage;
-import com.staringpig.framework.wechat.offiaccount.user.OAUserRepository;
 import com.staringpig.framework.wechat.offiaccount.user.OAUser;
+import com.staringpig.framework.wechat.offiaccount.user.OAUserRepository;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
