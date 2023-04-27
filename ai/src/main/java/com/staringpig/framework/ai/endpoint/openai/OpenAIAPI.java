@@ -10,9 +10,9 @@ import retrofit2.http.POST;
 
 public interface OpenAIAPI {
 
-    @POST("/v1/chat/completions")
+    @POST("v1/chat/completions")
     Call<ChatCompletionResult> createChatCompletion(@Body ChatCompletionRequest request);
 
-    @POST("/v1/moderations")
+    @POST("v1/moderations")
     Call<ModerationResult> createModeration(@Body ModerationRequest request);
 }

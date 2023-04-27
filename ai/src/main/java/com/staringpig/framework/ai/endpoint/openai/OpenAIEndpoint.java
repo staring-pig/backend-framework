@@ -1,11 +1,11 @@
 package com.staringpig.framework.ai.endpoint.openai;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staringpig.framework.ai.endpoint.Endpoint;
 import com.staringpig.framework.ai.endpoint.openai.api.ChatCompletionRequest;
 import com.staringpig.framework.ai.endpoint.openai.api.ChatCompletionResult;
 import com.staringpig.framework.ai.endpoint.openai.api.ModerationRequest;
 import com.staringpig.framework.ai.endpoint.openai.api.ModerationResult;
-import com.staringpig.framework.support.AllInOne;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.HttpException;
@@ -17,25 +17,29 @@ import java.util.function.Consumer;
 
 public class OpenAIEndpoint implements Endpoint {
     private final OpenAIAPI api;
+    private final ObjectMapper objectMapper;
 
-    public OpenAIEndpoint(OpenAIAPI api) {
+    public OpenAIEndpoint(OpenAIAPI api, ObjectMapper objectMapper) {
         this.api = api;
+        this.objectMapper = objectMapper;
     }
 
     public void chat(ChatCompletionRequest request, Consumer<ChatCompletionResult> consumer) {
-        api.createChatCompletion(request).enqueue(new OpenAICallback<>(consumer));
+        api.createChatCompletion(request).enqueue(new OpenAICallback<>(consumer, this.objectMapper));
     }
 
     public void moderate(ModerationRequest request, Consumer<ModerationResult> consumer) {
-        api.createModeration(request).enqueue(new OpenAICallback<>(consumer));
+        api.createModeration(request).enqueue(new OpenAICallback<>(consumer, this.objectMapper));
     }
 
     public static class OpenAICallback<T> implements Callback<T> {
 
         private final Consumer<T> consumer;
+        private final ObjectMapper objectMapper;
 
-        public OpenAICallback(Consumer<T> consumer) {
+        public OpenAICallback(Consumer<T> consumer, ObjectMapper objectMapper) {
             this.consumer = consumer;
+            this.objectMapper = objectMapper;
         }
 
         @Override
@@ -45,7 +49,7 @@ public class OpenAIEndpoint implements Endpoint {
             } else {
                 OpenAiError error;
                 try {
-                    error = AllInOne.DEFAULT_OBJECT_MAPPER.readValue(
+                    error = objectMapper.readValue(
                             Objects.requireNonNull(response.errorBody()).string(), OpenAiError.class);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -65,7 +69,7 @@ public class OpenAIEndpoint implements Endpoint {
                     }
                     String errorBody = e.response().errorBody().string();
 
-                    OpenAiError error = AllInOne.DEFAULT_OBJECT_MAPPER.readValue(errorBody, OpenAiError.class);
+                    OpenAiError error = objectMapper.readValue(errorBody, OpenAiError.class);
                     throw new OpenAiHttpException(error, e, e.code());
                 } catch (IOException ex) {
                     // couldn't parse OpenAI error

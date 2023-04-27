@@ -10,6 +10,6 @@ public interface AccessTokenAPI {
     /**
      * 获取accessToken
      */
-    @POST("/cgi-bin/token?grant_type=client_credential")
+    @POST("cgi-bin/token?grant_type=client_credential")
     Call<AccessTokenQuery.Result> getAccessToken(@Query("appid") String appId, @Query("secret") String appSecret);
 }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 公众号账号
@@ -12,6 +13,10 @@ import java.util.List;
 @Getter
 public class OAUser {
 
+    /**
+     * ID
+     */
+    private final UUID id;
     /**
      * 对应用户id
      */
@@ -100,7 +105,15 @@ public class OAUser {
     @Setter
     private String qrSceneStr;
 
+    public OAUser(UUID id, String openId, String oaAppId, OPUser opUser) {
+        this.id = id;
+        this.openId = openId;
+        this.oaAppId = oaAppId;
+        this.opUser = opUser;
+    }
+
     public OAUser(String openId, String oaAppId, OPUser opUser) {
+        this.id = UUID.randomUUID();
         this.openId = openId;
         this.oaAppId = oaAppId;
         this.opUser = opUser;

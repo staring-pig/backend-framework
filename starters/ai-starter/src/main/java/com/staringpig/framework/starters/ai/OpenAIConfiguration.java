@@ -1,5 +1,6 @@
 package com.staringpig.framework.starters.ai;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.staringpig.framework.ai.capability.ChatCompleting;
 import com.staringpig.framework.ai.endpoint.openai.AuthenticationInterceptor;
 import com.staringpig.framework.ai.endpoint.openai.Gpt_3_5_Turbo;
@@ -12,9 +13,10 @@ import com.staringpig.framework.ai.model.ChatContextStore;
 import com.staringpig.framework.ai.usage.Costing;
 import com.staringpig.framework.ai.usage.NoneCosting;
 import com.staringpig.framework.ai.usage.TokensUsage;
-import com.staringpig.framework.support.AllInOne;
+import com.staringpig.framework.starters.AutoConfiguration;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -34,13 +36,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @EnableCaching
 @EnableConfigurationProperties(OpenAIProperties.class)
 @Configuration(proxyBeanMethods = false)
+@AutoConfigureAfter(AutoConfiguration.class)
 public class OpenAIConfiguration {
-
-    @Bean
-    @ConditionalOnMissingBean
-    public JacksonConverterFactory jacksonConverterFactory() {
-        return JacksonConverterFactory.create(AllInOne.DEFAULT_OBJECT_MAPPER);
-    }
 
     @Bean
     @ConditionalOnMissingBean(value = Costing.class)
@@ -75,8 +72,8 @@ public class OpenAIConfiguration {
     }
 
     @Bean
-    public OkHttpClient openAIOkHttpClient(OpenAIProperties properties) {
-        return new OkHttpClient.Builder()
+    public OkHttpClient openAIOkHttpClient(OpenAIProperties properties, OkHttpClient okHttpClient) {
+        return new OkHttpClient.Builder(okHttpClient)
                 .addInterceptor(new AuthenticationInterceptor(properties.getToken()))
                 .proxy(new Proxy(properties.getProxy().getType(),
                         new InetSocketAddress(properties.getProxy().getHostname(),
@@ -91,22 +88,23 @@ public class OpenAIConfiguration {
     }
 
     @Bean
-    public OpenAIEndpoint openAIEndpoint(JacksonConverterFactory jacksonConverterFactory, OpenAIProperties properties,
-                                         OkHttpClient openAIOkHttpClient) {
+    public OpenAIEndpoint openAIEndpoint(ObjectMapper objectMapper, JacksonConverterFactory jacksonConverterFactory,
+                                         OpenAIProperties properties, OkHttpClient openAIOkHttpClient) {
         return new OpenAIEndpoint(new Retrofit.Builder()
                 .baseUrl(properties.getBaseUrl())
                 .client(openAIOkHttpClient)
                 .addConverterFactory(jacksonConverterFactory)
-                .build().create(OpenAIAPI.class));
+                .build().create(OpenAIAPI.class), objectMapper);
     }
 
     @Bean
     public Gpt_3_5_Turbo gpt_3_5_Turbo(JacksonConverterFactory jacksonConverterFactory, Costing<TokensUsage> costing,
                                        ChatContextStore chatContextStore, OpenAIProperties properties,
-                                       OpenAIEndpoint openAIEndpoint) {
+                                       OpenAIEndpoint openAIEndpoint, OkHttpClient okHttpClient) {
         return new Gpt_3_5_Turbo(costing, chatContextStore, openAIEndpoint,
                 new UtilsEndpoint(new Retrofit.Builder()
                         .baseUrl(properties.getUtilsBaseUrl())
+                        .client(okHttpClient)
                         .addConverterFactory(jacksonConverterFactory)
                         .build().create(TokenizerAPI.class)));
     }

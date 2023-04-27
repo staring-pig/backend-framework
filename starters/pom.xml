@@ -14,6 +14,7 @@
     <modules>
         <module>ai-starter</module>
         <module>wechat-starter</module>
+        <module>autoconfigure</module>
     </modules>
 
     <groupId>com.staringpig.framework</groupId>

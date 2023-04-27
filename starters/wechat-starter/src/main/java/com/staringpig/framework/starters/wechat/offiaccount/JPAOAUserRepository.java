@@ -4,16 +4,22 @@ import com.staringpig.framework.wechat.offiaccount.user.OAUser;
 import com.staringpig.framework.wechat.offiaccount.user.OAUserRepository;
 import com.staringpig.framework.wechat.oplatform.OPUser;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public interface JPAOAUserRepository extends OAUserRepository,
-        CrudRepository<JPAOAUserRepository.JPAOAUserEntity, String> {
+        CrudRepository<JPAOAUserRepository.JPAOAUserEntity, UUID> {
 
     Optional<JPAOAUserEntity> findByOpenId(String openId);
 
@@ -31,12 +37,18 @@ public interface JPAOAUserRepository extends OAUserRepository,
     @Entity
     @Setter
     @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     @Table(name = "t_oa_user")
     class JPAOAUserEntity {
+
+        @Id
+        @GeneratedValue(strategy = GenerationType.UUID)
+        private UUID id;
         /**
          * 对应用户id
          */
-        @Id
         private String openId;
         /**
          * 平台用户ID
@@ -92,10 +104,6 @@ public interface JPAOAUserRepository extends OAUserRepository,
          */
         private Integer groupId;
         /**
-         * 标签
-         */
-//        private List<Integer> tagIds;
-        /**
          * 订阅场景
          */
         private String subscribeScene;
@@ -109,7 +117,7 @@ public interface JPAOAUserRepository extends OAUserRepository,
         private String qrSceneStr;
 
         public OAUser convert() {
-            OAUser account = new OAUser(this.openId, this.oaAppId, new OPUser(this.unionId));
+            OAUser account = new OAUser(id, this.openId, this.oaAppId, new OPUser(this.unionId));
             account.setCity(this.getCity());
             account.setCountry(this.getCountry());
             account.setLanguage(this.getLanguage());
@@ -124,32 +132,30 @@ public interface JPAOAUserRepository extends OAUserRepository,
             account.setSubscribed(this.getSubscribed());
             account.setSubscribeScene(this.getSubscribeScene());
             account.setSubscribeTime(this.getSubscribeTime());
-//            account.setTagIds(this.getTagIds());
             return account;
         }
 
         public static JPAOAUserEntity valueOf(OAUser user) {
-//            return JPAOAUser.builder()
-//                    .unionId(user.getOpUser().unionId())
-//                    .city(user.getCity())
-//                    .sex(user.getSex())
-//                    .qrScene(user.getQrScene())
-//                    .country(user.getCountry())
-//                    .groupId(user.getGroupId())
-//                    .headImgUrl(user.getHeadImgUrl())
-//                    .language(user.getLanguage())
-//                    .nickname(user.getNickname())
-//                    .oaAppId(user.getOaAppId())
-//                    .openId(user.getOpenId())
-//                    .province(user.getProvince())
-//                    .qrSceneStr(user.getQrSceneStr())
-//                    .remark(user.getRemark())
-//                    .subscribed(user.getSubscribed())
-//                    .subscribeScene(user.getSubscribeScene())
-//                    .subscribeTime(user.getSubscribeTime())
-////                    .tagIds(user.getTagIds())
-//                    .build();
-            return null;
+            return JPAOAUserEntity.builder()
+                    .id(user.getId())
+                    .unionId(user.getOpUser().unionId())
+                    .city(user.getCity())
+                    .sex(user.getSex())
+                    .qrScene(user.getQrScene())
+                    .country(user.getCountry())
+                    .groupId(user.getGroupId())
+                    .headImgUrl(user.getHeadImgUrl())
+                    .language(user.getLanguage())
+                    .nickname(user.getNickname())
+                    .oaAppId(user.getOaAppId())
+                    .openId(user.getOpenId())
+                    .province(user.getProvince())
+                    .qrSceneStr(user.getQrSceneStr())
+                    .remark(user.getRemark())
+                    .subscribed(user.getSubscribed())
+                    .subscribeScene(user.getSubscribeScene())
+                    .subscribeTime(user.getSubscribeTime())
+                    .build();
         }
     }
 }

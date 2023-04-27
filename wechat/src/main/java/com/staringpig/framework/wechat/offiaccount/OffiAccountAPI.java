@@ -21,40 +21,40 @@ public interface OffiAccountAPI {
     /**
      * 微信网页授权access_token获取js-ticket
      */
-    @POST("/cgi-bin/ticket/getticket?type=jsapi")
-    Call<OAWebPageJsTicketCommand.Result> oaWebTicket(@Query("accessToken") String accessToken);
+    @POST("cgi-bin/ticket/getticket?type=jsapi")
+    Call<OAWebPageJsTicketCommand.Result> oaWebTicket(@Query("access_token") String accessToken);
 
     /**
      * 获取用户信息
      */
-    @POST("/cgi-bin/user/info?lang=zh_CN")
-    Call<UserInfoQuery.Result> getUserInfo(@Query("accessToken") String accessToken, @Query("openid") String openId);
+    @POST("cgi-bin/user/info?lang=zh_CN")
+    Call<UserInfoQuery.Result> getUserInfo(@Query("access_token") String accessToken, @Query("openid") String openId);
 
     /**
      * 微信网页授权-code换取access_token
      */
-    @POST("/sns/oauth2/access_token?grant_type=authorization_code")
+    @POST("sns/oauth2/access_token?grant_type=authorization_code")
     Call<OAWebPageAccessCommand.Result> oaWebAccessToken(@Query("appId") String appId, @Query("secret") String secret,
                                                          @Query("code") String code);
 
     /**
      * 客服接口 - 发消息
      */
-    @POST("/cgi-bin/message/custom/send")
-    Call<SendCustomMessageCommand.Result> sendCustomMessage(@Query("accessToken") String accessToken,
+    @POST("cgi-bin/message/custom/send")
+    Call<SendCustomMessageCommand.Result> sendCustomMessage(@Query("access_token") String accessToken,
                                                             @Body SendCustomMessageCommand command);
 
     /**
      * 客服接口 - 发语音消息
      */
-    @POST("/cgi-bin/message/custom/send")
-    Call<SendCustomVoiceMessageCommand.Result> sendCustomVoiceMessage(@Query("accessToken") String accessToken,
+    @POST("cgi-bin/message/custom/send")
+    Call<SendCustomVoiceMessageCommand.Result> sendCustomVoiceMessage(@Query("access_token") String accessToken,
                                                                       @Body SendCustomVoiceMessageCommand command);
 
     /**
      * 上传语音
      */
-    @POST("/cgi-bin/media/upload?type=voice")
+    @POST("cgi-bin/media/upload?type=voice")
     @Headers("Content-Type: multipart/form-data")
-    Call<UploadVoiceCommand.Result> uploadVoice(@Query("accessToken") String accessToken, @Query("media") File media);
+    Call<UploadVoiceCommand.Result> uploadVoice(@Query("access_token") String accessToken, @Query("media") File media);
 }

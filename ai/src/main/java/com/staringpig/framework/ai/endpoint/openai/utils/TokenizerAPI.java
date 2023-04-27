@@ -7,6 +7,6 @@ import retrofit2.http.POST;
 
 public interface TokenizerAPI {
 
-    @POST("/tokenizer/tokens")
+    @POST("tokenizer/tokens")
     Call<Long> countTokens(@Body CountTokensCommand command);
 }

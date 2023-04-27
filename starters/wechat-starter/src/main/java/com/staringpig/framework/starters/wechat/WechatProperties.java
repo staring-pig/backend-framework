@@ -49,6 +49,7 @@ public class WechatProperties {
         /**
          * 默认回复
          */
+        @NestedConfigurationProperty
         private DefaultReplay defaultReplay;
 
         @Setter
@@ -56,6 +57,7 @@ public class WechatProperties {
         @NoArgsConstructor
         @AllArgsConstructor
         public static class DefaultReplay {
+            private Boolean open = true;
             /**
              * 默认内容
              */

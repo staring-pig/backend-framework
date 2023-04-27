@@ -25,6 +25,7 @@ import com.staringpig.framework.wechat.offiaccount.message.handler.event.UpLocat
 import com.staringpig.framework.wechat.offiaccount.message.handler.event.ViewEventHandler;
 import com.staringpig.framework.wechat.offiaccount.message.handler.event.click.KeyClickEventHandler;
 import com.staringpig.framework.wechat.offiaccount.user.OAUserRepository;
+import okhttp3.OkHttpClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -45,10 +46,11 @@ public class OffiAccountConfiguration {
 
     @Bean
     public OAEndpoint oaEndpoint(AccessTokenEndpoint accessTokenEndpoint,
-                                 JacksonConverterFactory jacksonConverterFactory) {
+                                 JacksonConverterFactory jacksonConverterFactory, OkHttpClient okHttpClient) {
         return new OAEndpoint(new Retrofit.Builder()
                 .baseUrl(OffiAccountAPI.URL)
                 .addConverterFactory(jacksonConverterFactory)
+                .client(okHttpClient)
                 .build().create(OffiAccountAPI.class), accessTokenEndpoint);
     }
 
@@ -66,13 +68,14 @@ public class OffiAccountConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "staring-pig.framework.wechat.offi-account", name = "default-replay")
+    @ConditionalOnProperty(prefix = "staring-pig.framework.wechat.offi-account.default-replay", name = "open",
+            havingValue = "true")
     public DefaultReply defaultReply(WechatProperties properties) {
         return new DefaultReply(properties.getOffiAccount().getDefaultReplay().getContent(),
                 properties.getOffiAccount().getDefaultReplay().getWelcomeContent());
     }
 
-    @ConditionalOnBean(OAUserRepository.class)
+    @Configuration(proxyBeanMethods = false)
     @ConditionalOnMissingBean(value = OAMessageHandler.class)
     public static class MessageHandlerConfiguration {
 
