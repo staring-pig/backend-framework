@@ -5,7 +5,7 @@ import java.util.Optional;
 /**
  * 微信公众号账号仓储
  */
-public interface OAUserRepository {
+public interface OAUserStore {
 
     /**
      * 通过open-id查询用户账户

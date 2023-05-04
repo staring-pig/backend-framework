@@ -28,7 +28,7 @@ import com.staringpig.framework.wechat.offiaccount.message.reply.TextReplyMessag
 import com.staringpig.framework.wechat.offiaccount.message.reply.VideoReplyMessage;
 import com.staringpig.framework.wechat.offiaccount.message.reply.VoiceReplyMessage;
 import com.staringpig.framework.wechat.offiaccount.user.OAUser;
-import com.staringpig.framework.wechat.offiaccount.user.OAUserRepository;
+import com.staringpig.framework.wechat.offiaccount.user.OAUserStore;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -38,14 +38,14 @@ import java.util.Optional;
 public class NormalOAMessageConvertor implements OAMessageConvertor {
 
     private final OffiAccount offiAccount;
-    private final OAUserRepository oaUserRepository;
+    private final OAUserStore oaUserStore;
     private final KeyClickEvent.KeyConverter<? extends KeyClickEvent.Key> keyConverter;
 
     public NormalOAMessageConvertor(OffiAccount offiAccount,
-                                    OAUserRepository oaUserRepository,
+                                    OAUserStore oaUserStore,
                                     KeyClickEvent.KeyConverter<? extends KeyClickEvent.Key> keyConverter) {
         this.offiAccount = offiAccount;
-        this.oaUserRepository = oaUserRepository;
+        this.oaUserStore = oaUserStore;
         this.keyConverter = keyConverter;
     }
 
@@ -63,10 +63,10 @@ public class NormalOAMessageConvertor implements OAMessageConvertor {
         OAMessage oaMessage = null;
 
         OAUser account;
-        Optional<OAUser> opAppAccount = oaUserRepository.queryByOpenId(messageData.getFromUserName());
+        Optional<OAUser> opAppAccount = oaUserStore.queryByOpenId(messageData.getFromUserName());
         if (opAppAccount.isEmpty()) {
             OffiAccount.UserInfo userInfo = offiAccount.userInfo(messageData.getFromUserName());
-            account = oaUserRepository.saveIt(userInfo.convert(offiAccount.getAppId()));
+            account = oaUserStore.saveIt(userInfo.convert(offiAccount.getAppId()));
         } else {
             account = opAppAccount.get();
         }

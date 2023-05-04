@@ -4,7 +4,7 @@ import com.staringpig.framework.wechat.offiaccount.message.event.OAEventHandler;
 import com.staringpig.framework.wechat.offiaccount.message.event.UnsubscribeEvent;
 import com.staringpig.framework.wechat.offiaccount.message.handler.AllInOneHandler;
 import com.staringpig.framework.wechat.offiaccount.message.reply.ReplyMessage;
-import com.staringpig.framework.wechat.offiaccount.user.OAUserRepository;
+import com.staringpig.framework.wechat.offiaccount.user.OAUserStore;
 
 import java.util.Optional;
 
@@ -13,11 +13,11 @@ import java.util.Optional;
  */
 public class UnsubscribeEventHandler implements OAEventHandler<UnsubscribeEvent> {
 
-    private final OAUserRepository oaUserRepository;
+    private final OAUserStore oaUserStore;
     private final AllInOneHandler normalEventHandler;
 
-    public UnsubscribeEventHandler(OAUserRepository oaUserRepository, AllInOneHandler normalEventHandler) {
-        this.oaUserRepository = oaUserRepository;
+    public UnsubscribeEventHandler(OAUserStore oaUserStore, AllInOneHandler normalEventHandler) {
+        this.oaUserStore = oaUserStore;
         this.normalEventHandler = normalEventHandler;
     }
 
@@ -29,7 +29,7 @@ public class UnsubscribeEventHandler implements OAEventHandler<UnsubscribeEvent>
     @Override
     public Optional<ReplyMessage> on(UnsubscribeEvent event) {
         event.getOAUser().setSubscribed(false);
-        oaUserRepository.saveIt(event.getOAUser());
+        oaUserStore.saveIt(event.getOAUser());
         return normalEventHandler.onUnSubscribed(event.getOAUser());
     }
 }

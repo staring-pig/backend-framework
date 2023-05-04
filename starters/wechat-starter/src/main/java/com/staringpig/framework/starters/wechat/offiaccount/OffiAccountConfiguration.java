@@ -24,9 +24,8 @@ import com.staringpig.framework.wechat.offiaccount.message.handler.event.Unsubsc
 import com.staringpig.framework.wechat.offiaccount.message.handler.event.UpLocationEventHandler;
 import com.staringpig.framework.wechat.offiaccount.message.handler.event.ViewEventHandler;
 import com.staringpig.framework.wechat.offiaccount.message.handler.event.click.KeyClickEventHandler;
-import com.staringpig.framework.wechat.offiaccount.user.OAUserRepository;
+import com.staringpig.framework.wechat.offiaccount.user.OAUserStore;
 import okhttp3.OkHttpClient;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -60,7 +59,7 @@ public class OffiAccountConfiguration {
                 properties.getOffiAccount().getToken(), endpoint);
     }
 
-    @ConditionalOnMissingBean(value = OAUserRepository.class)
+    @ConditionalOnMissingBean(value = OAUserStore.class)
     @EntityScan("com.staringpig.framework.starters.wechat.offiaccount")
     @EnableJpaRepositories("com.staringpig.framework.starters.wechat.offiaccount")
     @Configuration(proxyBeanMethods = false)
@@ -91,21 +90,21 @@ public class OffiAccountConfiguration {
         }
 
         @Bean
-        public ScanSubscribeEventHandler scanSubscribeEventHandler(OAUserRepository oaUserRepository,
+        public ScanSubscribeEventHandler scanSubscribeEventHandler(OAUserStore oaUserStore,
                                                                    AllInOneHandler normalEventHandler) {
-            return new ScanSubscribeEventHandler(oaUserRepository, normalEventHandler);
+            return new ScanSubscribeEventHandler(oaUserStore, normalEventHandler);
         }
 
         @Bean
-        public SubscribeEventHandler subscribeEventHandler(OAUserRepository oaUserRepository,
+        public SubscribeEventHandler subscribeEventHandler(OAUserStore oaUserStore,
                                                            AllInOneHandler normalEventHandler) {
-            return new SubscribeEventHandler(oaUserRepository, normalEventHandler);
+            return new SubscribeEventHandler(oaUserStore, normalEventHandler);
         }
 
         @Bean
-        public UnsubscribeEventHandler unsubscribeEventHandler(OAUserRepository oaUserRepository,
+        public UnsubscribeEventHandler unsubscribeEventHandler(OAUserStore oaUserStore,
                                                                AllInOneHandler normalEventHandler) {
-            return new UnsubscribeEventHandler(oaUserRepository, normalEventHandler);
+            return new UnsubscribeEventHandler(oaUserStore, normalEventHandler);
         }
 
         @Bean
@@ -175,9 +174,9 @@ public class OffiAccountConfiguration {
     @Bean
     public OffiAccountReceiver offiAccountReceiver(OffiAccount offiAccount,
                                                    Collection<OAMessageHandler<? extends OAMessage>> messageHandlers,
-                                                   OAUserRepository oaUserRepository,
+                                                   OAUserStore oaUserStore,
                                                    KeyClickEvent.KeyConverter<? extends KeyClickEvent.Key> keyConverter
     ) {
-        return new OffiAccountReceiver(offiAccount, messageHandlers, oaUserRepository, keyConverter);
+        return new OffiAccountReceiver(offiAccount, messageHandlers, oaUserStore, keyConverter);
     }
 }

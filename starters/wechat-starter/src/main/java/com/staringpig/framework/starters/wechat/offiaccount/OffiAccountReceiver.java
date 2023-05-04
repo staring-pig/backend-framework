@@ -10,7 +10,7 @@ import com.staringpig.framework.wechat.offiaccount.message.listener.MessageListe
 import com.staringpig.framework.wechat.offiaccount.message.listener.NormalOAMessageConvertor;
 import com.staringpig.framework.wechat.offiaccount.message.listener.api.PublishedMessageData;
 import com.staringpig.framework.wechat.offiaccount.message.listener.api.ReceivedMessageData;
-import com.staringpig.framework.wechat.offiaccount.user.OAUserRepository;
+import com.staringpig.framework.wechat.offiaccount.user.OAUserStore;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -33,10 +33,10 @@ public class OffiAccountReceiver extends BaseMessageListener implements MessageL
 
     public OffiAccountReceiver(OffiAccount offiAccount,
                                Collection<OAMessageHandler<? extends OAMessage>> messageHandlers,
-                               OAUserRepository oaUserRepository,
+                               OAUserStore oaUserStore,
                                KeyClickEvent.KeyConverter<? extends KeyClickEvent.Key> keyConverter) {
         super(offiAccount, new NormalHandlerDispatcher(),
-                new NormalOAMessageConvertor(offiAccount, oaUserRepository, keyConverter));
+                new NormalOAMessageConvertor(offiAccount, oaUserStore, keyConverter));
         super.oaMessageDispatcher.registerMessageHandler(messageHandlers);
     }
 

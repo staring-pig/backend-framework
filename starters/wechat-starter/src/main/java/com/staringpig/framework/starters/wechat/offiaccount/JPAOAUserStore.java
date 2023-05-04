@@ -1,7 +1,7 @@
 package com.staringpig.framework.starters.wechat.offiaccount;
 
 import com.staringpig.framework.wechat.offiaccount.user.OAUser;
-import com.staringpig.framework.wechat.offiaccount.user.OAUserRepository;
+import com.staringpig.framework.wechat.offiaccount.user.OAUserStore;
 import com.staringpig.framework.wechat.oplatform.OPUser;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,8 +18,8 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 import java.util.UUID;
 
-public interface JPAOAUserRepository extends OAUserRepository,
-        CrudRepository<JPAOAUserRepository.JPAOAUserEntity, UUID> {
+public interface JPAOAUserStore extends OAUserStore,
+        CrudRepository<JPAOAUserStore.JPAOAUserEntity, UUID> {
 
     Optional<JPAOAUserEntity> findByOpenId(String openId);
 
