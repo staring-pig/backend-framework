@@ -11,9 +11,10 @@ import com.staringpig.framework.wechat.offiaccount.message.listener.NormalOAMess
 import com.staringpig.framework.wechat.offiaccount.message.listener.api.PublishedMessageData;
 import com.staringpig.framework.wechat.offiaccount.message.listener.api.ReceivedMessageData;
 import com.staringpig.framework.wechat.offiaccount.user.OAUserStore;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -53,23 +52,18 @@ public class OffiAccountReceiver extends BaseMessageListener implements MessageL
     }
 
     @GetMapping(value = "${staring-pig.framework.wechat.offi-account.notify-path}")
-    public void checkSignature(@RequestParam(value = "signature") String signature,
-                               @RequestParam(value = "timestamp") String timestamp,
-                               @RequestParam(value = "nonce") String nonce,
-                               @RequestParam(value = "echostr") String echo,
-                               HttpServletResponse response) {
+    public ResponseEntity<String> checkSignature(@RequestParam(value = "signature") String signature,
+                                                 @RequestParam(value = "timestamp") String timestamp,
+                                                 @RequestParam(value = "nonce") String nonce,
+                                                 @RequestParam(value = "echostr") String echo,
+                                                 ServerHttpResponse response) {
         log.info("接收到微信请求，入参: [signature]: [" + signature + "], [timestamp]: [" + timestamp + "]," +
                 " [nonce]: [" + nonce + "], [echostr]: [" + echo + "]");
         if (super.checkSignature(signature, timestamp, nonce)) {
-            try {
-                PrintWriter out = response.getWriter();
-                out.print(echo);
-                out.close();
-            } catch (IOException e) {
-                log.error("故障！", e);
-            }
+            return ResponseEntity.ok(echo);
         } else {
             log.info("这里存在非法请求！");
+            return ResponseEntity.badRequest().build();
         }
     }
 }

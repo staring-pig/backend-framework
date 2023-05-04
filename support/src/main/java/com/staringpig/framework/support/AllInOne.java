@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import lombok.experimental.UtilityClass;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Map;
@@ -34,7 +33,7 @@ public final class AllInOne {
      * @param obj the object to check
      * @return 是否不为空
      */
-    public static boolean isNotEmpty(@Nullable Object obj) {
+    public static boolean isNotEmpty(Object obj) {
         return !isEmpty(obj);
     }
 
@@ -45,7 +44,7 @@ public final class AllInOne {
      * @param array 数组
      * @return 数组是否不为空
      */
-    public static boolean isNotEmpty(@Nullable Object[] array) {
+    public static boolean isNotEmpty(Object[] array) {
         return !isEmpty(array);
     }
 
@@ -54,7 +53,7 @@ public final class AllInOne {
      * Determine whether the given array is empty:
      * i.e. {@code null} or of zero length.
      */
-    public static boolean isEmpty(@Nullable Object[] array) {
+    public static boolean isEmpty(Object[] array) {
         return (array == null || array.length == 0);
     }
 
@@ -63,7 +62,7 @@ public final class AllInOne {
      * Determine whether the given object is empty.
      * <p>This method supports the following object types.
      */
-    public static boolean isEmpty(@Nullable Object obj) {
+    public static boolean isEmpty(Object obj) {
         if (obj == null) {
             return true;
         }
@@ -106,7 +105,7 @@ public final class AllInOne {
      * its length is greater than 0, and it does not contain whitespace only
      * @see Character#isWhitespace
      */
-    public static boolean isBlank(@Nullable final CharSequence cs) {
+    public static boolean isBlank(final CharSequence cs) {
         return !hasText(cs);
     }
 
@@ -128,7 +127,7 @@ public final class AllInOne {
      * its length is greater than 0, and it does not contain whitespace only
      * @see Character#isWhitespace
      */
-    public static boolean hasText(@Nullable CharSequence str) {
+    public static boolean hasText(CharSequence str) {
         return (str != null && str.length() > 0 && containsText(str));
     }
 
