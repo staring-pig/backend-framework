@@ -70,11 +70,13 @@ public abstract class ChatModel extends OpenAIModel {
                     OpenAIModel.tokens(currentChatMessage.getContent());
         }
 
+        int realTokens = Math.min(this.maxTokens, limitTokens) - questionTokens - 10;
+
         return ChatCompletionRequest.builder()
                 .model(this.getId())
                 .messages(newChatMessage)
                 .temperature(super.metadata.getTemperature())
-                .maxTokens(Math.min(this.maxTokens, limitTokens) - questionTokens - 10)
+                .maxTokens(realTokens <= 0 ? this.maxTokens - questionTokens - 10 : realTokens)
                 .user(user)
                 .n(super.metadata.getN())
                 .stop(this.metadata.getStop())
