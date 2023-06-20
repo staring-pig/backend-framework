@@ -52,10 +52,15 @@ public abstract class OpenAIModel {
     public final Integer maxTokens;
 
     /**
-     * 每1k tokens 的价格
+     * 每1k tokens 的 prompt 价格
      */
     @Getter
-    protected final BigDecimal pricePerThousandTokens;
+    protected final BigDecimal pricePerThousandTokensOfPrompt;
+    /**
+     * 每1k tokens 的 completion 价格
+     */
+    @Getter
+    protected final BigDecimal pricePerThousandTokensOfCompletion;
     /**
      * session 管理
      */
@@ -84,12 +89,15 @@ public abstract class OpenAIModel {
     /**
      * 总tokens消耗的费用
      *
-     * @param totalTokens 总tokens
+     * @param promptTokens     请求tokens
+     * @param completionTokens 回答tokens
      * @return 消费额度
      */
-    protected BigDecimal cost(Long totalTokens) {
-        return BigDecimal.valueOf(totalTokens)
-                .multiply(this.pricePerThousandTokens)
+    protected BigDecimal cost(Long promptTokens, long completionTokens) {
+        return BigDecimal.valueOf(promptTokens)
+                .multiply(this.pricePerThousandTokensOfPrompt)
+                .add(BigDecimal.valueOf(completionTokens)
+                        .multiply(this.pricePerThousandTokensOfCompletion))
                 .divide(BigDecimal.valueOf(1000), 10, RoundingMode.HALF_DOWN);
     }
 

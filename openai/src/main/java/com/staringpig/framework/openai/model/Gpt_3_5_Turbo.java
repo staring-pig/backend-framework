@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 public class Gpt_3_5_Turbo extends ChatModel {
 
     public Gpt_3_5_Turbo(OpenAI openAI, SessionManager sessionManager) {
-        super("gpt-3.5-turbo-16k", openAI, OpenAI.Metadata.defaultInstance(), 16384, BigDecimal.valueOf(0.05),
-                sessionManager);
+        super("gpt-3.5-turbo", openAI, OpenAI.Metadata.defaultInstance(), 4096, BigDecimal.valueOf(0.0015),
+                BigDecimal.valueOf(0.002), sessionManager);
     }
 }

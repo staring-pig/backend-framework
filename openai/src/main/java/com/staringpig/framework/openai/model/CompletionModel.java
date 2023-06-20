@@ -39,9 +39,11 @@ public abstract class CompletionModel extends OpenAIModel {
     protected final Integer logprobs;
 
     protected CompletionModel(String id, OpenAI openAI, OpenAI.Metadata metadata, Integer maxTokens,
-                              BigDecimal pricePerThousandTokens, String suffix, Boolean echo, Integer bestOf,
+                              BigDecimal pricePerThousandTokensOfPrompt, BigDecimal pricePerThousandTokensOfCompletion,
+                              String suffix, Boolean echo, Integer bestOf,
                               Integer logprobs, SessionManager sessionManager) {
-        super(id, openAI, metadata, maxTokens, pricePerThousandTokens, sessionManager);
+        super(id, openAI, metadata, maxTokens, pricePerThousandTokensOfPrompt, pricePerThousandTokensOfCompletion,
+                sessionManager);
         this.suffix = suffix;
         this.echo = echo;
         this.bestOf = bestOf;
@@ -73,7 +75,7 @@ public abstract class CompletionModel extends OpenAIModel {
             answer.append(StringUtil.trimWhitespace(completion.getChoices().get(i).getText()));
         }
         return new Answer(completion.getUsage().getTotalTokens(),
-                super.cost(completion.getUsage().getTotalTokens()), answer.toString());
+                super.cost(completion.getUsage().getPromptTokens(), completion.getUsage().getCompletionTokens()), answer.toString());
     }
 
     private CompletionRequest buildRequest(String user, String question, Integer limitTokens) {

@@ -19,8 +19,10 @@ import java.util.function.Consumer;
 public abstract class ChatModel extends OpenAIModel {
 
     protected ChatModel(String id, OpenAI openAI, OpenAI.Metadata metadata, Integer maxTokens,
-                        BigDecimal pricePerThousandTokens, SessionManager sessionManager) {
-        super(id, openAI, metadata, maxTokens, pricePerThousandTokens, sessionManager);
+                        BigDecimal pricePerThousandTokensOfPrompt, BigDecimal pricePerThousandTokensOfCompletion,
+                        SessionManager sessionManager) {
+        super(id, openAI, metadata, maxTokens, pricePerThousandTokensOfPrompt, pricePerThousandTokensOfCompletion,
+                sessionManager);
     }
 
     @Override
@@ -46,7 +48,8 @@ public abstract class ChatModel extends OpenAIModel {
             answer.append(StringUtil.trimWhitespace(completion.getChoices().get(i).getMessage().getContent()));
         }
         return new Answer(completion.getUsage().getTotalTokens(),
-                super.cost(completion.getUsage().getTotalTokens()), answer.toString());
+                super.cost(completion.getUsage().getPromptTokens(), completion.getUsage().getCompletionTokens()),
+                answer.toString());
     }
 
     private ChatCompletionRequest buildRequest(String user, String question, Integer limitTokens,
